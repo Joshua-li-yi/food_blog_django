@@ -1,0 +1,97 @@
+
+*{
+    margin: 0;
+    padding: 0;
+}
+#signInWnd{
+    /* position:  absolute; */
+    /* left: 50%; */
+    /* align-items: center; */
+    /* margin-left: -200px; */
+    /* width: 400px; */
+    height: 670px;
+    background: #FFFFFF;
+    box-shadow: 0 0 10px 0 rgba(0,33,79,0.11);
+    border-radius: 6px;
+}
+#signInIcon img{
+    /* width: 145px; */
+    /* left: 50%; */
+    margin-left: 230px;
+}
+#chooseSignInway{
+    width: 100%;
+}
+/* #chooseSignInway span{ */
+    /* display: inline-block; */
+    /* width: 60px; */
+    /* height: 25px;
+    line-height: 25px;
+    font-size: 14px;
+    color: #777; */
+    /* transition: all ease-in .2s; */
+    /* float: left; */
+    /* margin-right: 20px; */
+    /* text-align: center;
+} */
+/* #signInInfo ul li {
+    right: 0;
+    position: relative;
+    height: 40px;
+    width: 340px;
+    margin-bottom: 25px;
+    margin-left: 40px;
+
+} */
+#signInInfo input {
+    background: #F6F6F6;
+    border: 1px solid #EDEDED;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+    color: #3D4059;
+    width: 450px;
+}
+
+
+#signInInfo .input-error{
+    border: 1px solid #F94F17;
+    box-shadow: 0 0 8px 0 rgba(255,101,128,0.28);
+}
+#signInInfo ul li input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color: #BFBFBF;
+}
+#signInInfo ul li input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #BFBFBF;
+} 
+#signInInfo ul li input::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #BFBFBF;
+}
+#signInInfo ul li input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: #BFBFBF;
+}
+.wall-sub-btn {
+    /* display: block; */
+    /* margin: 42px auto 0; */
+    /* width: 340px; */
+    height: 40px;
+    line-height: 40px;
+    /* font-size: 16px; */
+    /* color: #fff;
+    text-align: center;
+    cursor: pointer;
+    background: #3D84FF; */
+}
+/* .wall-sub-btn:hover {
+    opacity: 0.8;
+}
+.wall-sub-btn:active {
+    background-position:0 -128px;
+}
+
+.wall-sub-btn.disable {
+    border-color: #E4ECEA;
+    background: #E4ECEA;
+    cursor: default;
+    text-shadow: none;
+} */
