@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     # 新增app
-    'index.apps.IndexConfig'
+    # 'index'
     
     'django.contrib.admin',
     'django.contrib.auth',
@@ -80,8 +80,16 @@ WSGI_APPLICATION = 'food_blog.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+
+        'ENGINE': 'django.db.backends.mysql',  # 提示连接mysql数据库
+        'NAME': 'food_blog',  # 数据库名为test，要自己创建
+        'USER': 'root',  # 用户名
+        'PASSWORD': '',  # 密码
+        'HOST': '127.0.0.1',  # 连接的主机
+        'PORT': '3306',  # 对应的端口号
+
     }
 }
 
@@ -104,7 +112,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+# AUTH_USER_MODEL = 'account.User'
+# AUTHENTICATION_BACKENDS = (
+#     'accout.v'
+# )
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -124,5 +135,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static')
+    # 需要加逗号
+    os.path.join(BASE_DIR, 'static'),
 )

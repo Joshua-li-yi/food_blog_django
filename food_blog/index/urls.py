@@ -1,7 +1,7 @@
 from django.urls import path
 from index.views import index
-
+from index import views
 urlpatterns = [
-    # path('admin/', admin.site.urls),
-    path('index/', index)
+    path(r'singup/', views.sigup),
+    path(r'', index)
 ]
