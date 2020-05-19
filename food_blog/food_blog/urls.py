@@ -21,5 +21,7 @@ urlpatterns = [
     path(r'control/', admin.site.urls),
 
     # 进入子路由
-    path(r'index/', include('index.urls'))
+    path(r'index/', include('index.urls')),
+
+    path(r'user/', include('user.urls'))
 ]
