@@ -17,6 +17,10 @@
 
 {#         将信息发到user app#}
         <form method="post" action="/user/register">
+            {% if message %}
+                    <div class="alert alert-warning">{{ message }}</div>
+            {% endif %}
+
             <fieldset>
               <legend>SignUp</legend>
               <div class="form-group row">
@@ -36,11 +40,11 @@
               </div>
               <div class="form-group">
                 <label for="exampleInputPassword1">Password</label>
-                <input name="pwd" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                <input name="pwd1" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
               </div>
               <div class="form-group">
                 <label for="exampleInputPassword1">Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                <input name="pwd2" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
               </div>
 {#              <div class="form-group">#}
 {#                <label for="exampleSelect1">Example select</label>#}
@@ -75,13 +79,15 @@
                 <legend>gender</legend>
                 <div class="form-check">
                   <label class="form-check-label">
-                    <input type="radio" class="form-check-input" name="optionsRadios" id="genderFemale" value="option1" checked="">
+{#                      value 为当选中之后所对应的值#}
+{#                      女性为0， 男性为1#}
+                    <input type="radio" class="form-check-input" name="gender" id="genderFemale" value=0 checked="">
                     female
                   </label>
                 </div>
                 <div class="form-check">
                 <label class="form-check-label">
-                    <input type="radio" class="form-check-input" name="optionsRadios" id="genderMale" value="option2">
+                    <input type="radio" class="form-check-input" name="gender" id="genderMale" value=1>
                     male
                   </label>
                 </div>
@@ -122,7 +128,8 @@
                 </div>
                 </fieldset>
 
-                <a class="btn btn-primary btn-md" href="/user/register" role="button">Submit</a>
+{#                <a class="btn btn-primary btn-md" href="/user/register" role="button">Submit</a>#}
+                <button class="btn btn-primary btn-md" type="submit" >Submit</button>
             </fieldset>
           </form>
      </div>
