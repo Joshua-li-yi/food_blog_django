@@ -16,6 +16,10 @@
 </head>
 
 <body>
+    {% if message %}
+            <div class="alert alert-warning">{{ message }}</div>
+        {% endif %}
+
 <div class="row">
     <div class="col-md-5">
         <img src="/static/img/logIn_food2.jpg" alt="" style="width: 100%;height: 100%;">
@@ -28,30 +32,31 @@
         </div>
 
         <!-- 登陆信息 -->
-        <form lass="form-horizontal" action="" method="post" id="SignInForm" role="form">
+        <form lass="form-horizontal" action="/user/logIn" method="post" id="SignInForm" role="form">
             <div id='signInInfo' class="tab-content " style="margin-left: 150px;">
                 <!--手机号-->
                 <div class="tab-pane fade active show" id="phoneNumberSignIn">
 
                     <div class="form-group">
                         <label for="exampleInputEmail1">Name</label>
-                        <input type="text" class="form-control" placeholder="Place input your name">
+                        <input type="text" class="form-control" placeholder="Place input your name" name="name">
                         <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with
                                 anyone else.</small> -->
                     </div>
                     <div class="form-group">
                         <label for="exampleInputPassword1">password</label>
-                        <input type="password" class="form-control" id="phonePwd" placeholder="password">
+                        <input type="password" class="form-control" id="phonePwd" placeholder="password" name="pwd">
                     </div>
 
                 </div>
             </div>
+
+            <div class="form-grop signIn " style="margin-left: 310px;margin-top: 30px;">
+                <button type="submit" class="btn btn-primary btn-lg ">LOG
+                    IN
+                </button>
+            </div>
         </form>
-        <div class="form-grop signIn " style="margin-left: 310px;margin-top: 30px;">
-            <button type="button" class="btn btn-primary btn-lg " onclick="window.location.href ='/index/home' ">LOG
-                IN
-            </button>
-        </div>
     </div>
 </div>
 

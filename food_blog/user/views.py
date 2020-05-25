@@ -1,6 +1,7 @@
 from django.shortcuts import render
 import pymysql
-
+# 获取当前时间
+import datetime
 # Create your views here.
 
 
@@ -14,8 +15,14 @@ def register(request):
         pwd = request.POST.get('pwd1')
         pwd2 = request.POST.get('pwd2')
         gender = request.POST.get('gender')
-
-        print( 'VALUES(1, "{}", 20200920, "{}" , "{}", 20000920, {})'.format(name, email, pwd, gender))
+        birthday = request.POST.get('datetimepicker')
+        # 字符串中删掉某个字符
+        birthday = birthday.replace('-', '')
+        # 获取当前时间 即为注册时间
+        now_time = datetime.datetime.now().strftime('%Y%m%d')
+        # print(now_time)
+        # print(birthday)
+        print( 'VALUES(1, "{}", {}, "{}" , "{}", {}, {})'.format(name, now_time, email, pwd, birthday, gender))
         # 异常检测
         if name == '':
             message = 'The name can not be none'
@@ -35,10 +42,11 @@ def register(request):
 
         # sql语句
         # （）实现多行字符串连接
+        # ID为自增ID所以不用进行赋值
         sql = (
-            'INSERT INTO `user` '
+            'INSERT INTO `user`(user_name, user_registered, user_email, user_pass, user_birthday, gender) '
             # {}作为占位符
-            'VALUES(2, "{}", 20200920, "{}" , "{}", 20000920, "{}")'.format(name, email, pwd, gender)
+            'VALUES("{}", {}, "{}" , "{}", {}, {})'.format(name, now_time, email, pwd, birthday, gender)
         )
 
         try:
@@ -69,29 +77,61 @@ def register(request):
 
 # 用户登陆
 def logIn(request):
-    return render(request, 'logIn.html')
-    # if request.method == 'POST':
-    #     # email = request.POST.get('userEmail')
-    #     # name = request.POST.get('userName')
-    #     # pwd = request.POST.get('pwd')
-    #     # 连接数据库
-    #     # db = pymysql.connect(host='localhost', port=3306, user='root', passwd='', db='food_blog', charset='utf8mb4')
-    #     # # 创建游标
-    #     # cursor = db.cursor()
-    #     # # sql语句
-    #     # sql = """
-    #     # INSERT INTO user
-    #     # """
-    #     # # 执行语句
-    #     # cursor.execute(sql)
-    #     # # 关闭游标
-    #     # cursor.close()
-    #     # # 关闭数据库连接
-    #     # db.close()
-    #     # print(email, name, pwd)
-    #     # return render(request, 'home.html')
-    # elif request.method =='GET':
-    #     return render(request, 'logIn.html')
+    if request.method == 'POST':
+        # 获取用户名和密码
+        name = request.POST.get('name')
+        pwd = request.POST.get('pwd')
+
+        print('begin login ')
+        # 连接数据库
+        db = pymysql.connect(host='localhost', port=3306, user='root', passwd='', db='food_blog', charset='utf8mb4')
+        # 创建游标
+        cursor = db.cursor()
+        # SQL 查询语句
+        sql = 'SELECT user_pass FROM user WHERE user_name = "{}"'.format(name)
+
+        try:
+            # 执行SQL语句
+            cursor.execute(sql)
+            # 获取所有记录列表
+            if cursor is not None:  # 注意这里。单纯判断cursor是否为None是不够的
+                result = cursor.fetchone()
+                print('result', result)
+                # 判断是否有此用户
+                if result is not None:
+                    db_pwd = result[0]
+                    # 判断密码是否正确
+                    if db_pwd == pwd:
+                        print("log in success")
+                        return render(request, 'home.html')
+                    else:
+                        print('pwd not true')
+                        message = 'the pwd is not true, please input again'
+                        return render(request, 'logIn.html', {'message': message})
+                else:
+                    print('result is  None')
+                    print('this user not exist')
+                    message = 'this user not exist, please chick the name whether true or not'
+                    return render(request, 'logIn.html', {'message': message})
+            else:
+                print('cursor is None')
+                print('this user not exist')
+                message = 'this user not exist, please chick the name whether true or not'
+                return render(request, 'logIn.html', {'message': message})
+            print('execute sql success')
+        except:
+            db.rollback()
+            print('rollback')
+            message = 'something error when log in'
+            print(message)
+            return render(request, 'logIn.html', {'message': message})
+        cursor.close()
+        # 关闭数据库连接
+        db.close()
+        print('close db')
+    elif request.method =='GET':
+        return render(request, 'logIn.html')
+
 
 # 用户主页
 def home(request):
