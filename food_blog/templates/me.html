@@ -8,54 +8,176 @@
     <link rel="icon" href="/static/img/food_blog_icon%20.png" style="width: auto;">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/static/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/me.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+
     <title>Me</title>
 </head>
 
 <body>
+<div>
     <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a class="nav-link active" data-toggle="tab" href="#home">Home</a>
+            <a class="nav-link active" data-toggle="tab" href="#Profile">Profile</a>
         </li>
+        {#        跳转回家#}
         <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#profile">Profile</a>
+            <a class="nav-link" href="/user/home" type="button" style="background-color:#343434">Back</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#">Disabled</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-          <div class="dropdown-menu" style="">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something else here</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Separated link</a>
-          </div>
-        </li>
-      </ul>
-      <div id="myTabContent" class="tab-content">
-        <div class="tab-pane fade show active" id="home">
-          <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
+        {#        <li class="nav-item">#}
+        {#            <a class="nav-link disabled" href="#">Disabled</a>#}
+        {#        </li>#}
+        {#        <li class="nav-item dropdown">#}
+        {#            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"#}
+        {#               aria-expanded="false">Dropdown</a>#}
+        {#            <div class="dropdown-menu">#}
+        {#                <a class="dropdown-item" href="#">Action</a>#}
+        {#                <a class="dropdown-item" href="#">Another action</a>#}
+        {#                <a class="dropdown-item" href="#">Something else here</a>#}
+        {#                <div class="dropdown-divider"></div>#}
+        {#                <a class="dropdown-item" href="#">Separated link</a>#}
+        {#            </div>#}
+        {#        </li>#}
+    </ul>
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade active show" id="Profile">
+            <div class="container bg-dark text-light">
+                <div id="wrapper">
+                    <div class="header text-primary clearfix ">
+                        <!-- <div class="image">
+                            <img src="img/messi.jpg" alt="messi" class="img-thumbail img-responsive ">
+                        </div> -->
+                        {#                昵称和基本介绍#}
+                        <div class="content">
+                            <h1 class="display-4">Joshua_yi</h1>
+                            <h2 class="lead">Web designer & Developer</h2>
+                        </div>
+                    </div>
+                    <hr class="my-auto">
+                    <div class="row row-info">
+                        <div class="col-md-5">
+                            <h3 class="col-header-title text-success"><i class="fa fa-user-circle-o"></i> About me</h3>
+
+                            <p>My name is Nguyen Quoc Cuong. I'm 23 years old. I am a final student in Da Nang
+                                University Of Technology .
+                                My major is Information Technology.</p>
+
+                            <p>Especialy, I have experience and passion about Web Developer</p>
+                        </div>
+
+                        <div class="col-md-5 offset-md-2">
+
+                            <h3 class="col-header-title text-success"><i class="fa fa-star-o"></i>Contact</h3>
+
+                            <table>
+                                <tr>
+                                    <td class="td1">Facebook</td>
+                                    <td><a href="http://www.facebook.com/wolf.ccc">facebook.com/wolf.ccc </a></td>
+                                </tr>
+                                <tr>
+                                    <td class="td1">Github</td>
+                                    <td><a href="https://github.com/Wolf2101">github.com/Wolf2101</a></td>
+                                </tr>
+                                <tr>
+                                    <td class="td1">Email</td>
+                                    <td><a href="mailto:cuongnq211@gmail.com?subject=Dear20%Mr20%Cuong">cuongnq211@gmail.com</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="td1">Phone</td>
+                                    <td>01664191601</td>
+                                </tr>
+                                <tr>
+                                    <td class="td1">City</td>
+                                    <td>Danang</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <hr class="my-auto">
+                    <div class="row row-info">
+                        <div class="col-md-6">
+                            <h3 class="col-header-title text-success"><i class="fa fa-graduation-cap"></i> Education &
+                                Experience </h3>
+
+                            <table>
+                                <tr>
+                                    <td valign="top" class="text-warning">
+                                        2013-2018
+                                    </td>
+                                    <td valign="top">
+                                        <strong> Da Nang University Of Technology </strong> <br> I study there for 5
+                                        year. My major is Information technology.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" class="text-warning">05/2017-10/2017</td>
+                                    <td valign="top">
+                                        <strong> BAP Company </strong> <br> I'm Node JS Internship for 5 months there.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" class="text-warning">Currently</td>
+                                    <td valign="top">
+                                        <strong> DAC Tech Viet Nam Company </strong> <br> I being trained here at PHP
+                                        Internship position.
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-5 offset-md-1">
+                            <h3 class="col-header-title text-success"><i class="fa fa-book"></i> Skill & Language</h3>
+                            <ul>
+                                <li>Front-End (Html, css, javascript...)</li>
+                                <li>Back-End (PHP,Node Js)</li>
+                                <li>Other language (C, C++ ,Java...)</li>
+                                <li>Team work (listening, personal idea...)</li>
+                                <li>Good Atitude (Never stop learning, improving...)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <hr class="my-auto">
+                    <div class="row row-info">
+                        <div class="col-md-12">
+                            <h3 class="col-header-title text-success"><i class="fa fa-file"></i> Some Project </h3>
+                            <ul>
+                                <li>Manage Student using C++ .</li>
+                                <li>Website order(only sell) and ship Flower using PHP.</li>
+                                <li>Website Manage vacxin using JSP Servlet MVC.</li>
+                                <li>Website order (buy/sell) gift card using Node Js.</li>
+                                <li>Website Manage user for app chat, API for app chat using Node Js.</li>
+                                <li>App Music on Androind.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="tab-pane fade" id="profile">
-          <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit.</p>
-        </div>
-        <div class="tab-pane fade" id="dropdown1">
-          <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork.</p>
-        </div>
-        <div class="tab-pane fade" id="dropdown2">
-          <p>Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin. Cred vinyl keffiyeh DIY salvia PBR, banh mi before they sold out farm-to-table VHS viral locavore cosby sweater.</p>
-        </div>
-      </div>
-        <!-- Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.slim.min.js"
-            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
-        </script>
-        <script src="/static/js/bootstrap.js"></script>
+        {#        <div class="tab-pane fade" id="Back">#}
+        {#        </div>#}
+        {#        <div class="tab-pane fade" id="dropdown1">#}
+        {#            <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro#}
+        {#                fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone#}
+        {#                skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings#}
+        {#                gentrify squid 8-bit cred pitchfork.</p>#}
+        {#        </div>#}
+        {#        <div class="tab-pane fade" id="dropdown2">#}
+        {#            <p>Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master#}
+        {#                cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party#}
+        {#                locavore wolf cliche high life echo park Austin. Cred vinyl keffiyeh DIY salvia PBR, banh mi before they#}
+        {#                sold out farm-to-table VHS viral locavore cosby sweater.</p>#}
+        {#        </div>#}
+    </div>
+</div>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+</script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+</script>
+<script src="/static/js/bootstrap.js"></script>
 </body>
 
 </html>
