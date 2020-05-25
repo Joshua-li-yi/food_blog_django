@@ -79,7 +79,7 @@ def register(request):
 def logIn(request):
     if request.method == 'POST':
         # 获取用户名和密码
-        name = request.POST.get('name')
+        email = request.POST.get('email')
         pwd = request.POST.get('pwd')
 
         print('begin login ')
@@ -88,7 +88,7 @@ def logIn(request):
         # 创建游标
         cursor = db.cursor()
         # SQL 查询语句
-        sql = 'SELECT user_pass FROM user WHERE user_name = "{}"'.format(name)
+        sql = 'SELECT user_pass FROM user WHERE user_email = "{}"'.format(email)
 
         try:
             # 执行SQL语句
@@ -136,3 +136,13 @@ def logIn(request):
 # 用户主页
 def home(request):
     return render(request, 'home.html')
+
+
+# 自己的简历
+def me(request):
+    return render(request, 'me.html')
+
+
+# 写博客
+def writeBlog(request):
+    return render(request, 'writeblog.html')
