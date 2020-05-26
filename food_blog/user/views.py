@@ -1,8 +1,43 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import pymysql
 # 获取当前时间
 import datetime
 # Create your views here.
+# 导入用于装饰器修复技术的包
+from functools import wraps
+# Create your views here.
+
+"""
+session会用到数据库，所以使用之前需要初始化数据库，
+即执行makemigrations migrate
+
+1. 设置session
+2. 获取session
+3. 删除session
+"""
+
+
+# 装饰器函数，用来判断是否登录
+def check_login(func):
+    @wraps(func)  # 装饰器修复技术
+    def inner(request, *args, **kwargs):
+        ret = request.session.get("is_login")
+        # 1. 获取cookie中的随机字符串
+        # 2. 根据随机字符串去数据库取 session_data --> 解密 --> 反序列化成字典
+        # 3. 在字典里面 根据 is_login 取具体的数据
+
+        if ret == "1":
+            # 已经登录，继续执行
+            return func(request, *args, **kwargs)
+        # 没有登录过，重新登陆
+        else:
+            # ** 即使登录成功也只能跳转到home页面，现在通过在URL中加上next指定跳转的页面
+            # 获取当前访问的URL
+            # next_url = request.path_info
+            # return redirect("/app02/login/?next={}".format(next_url))
+            # return redirect('/user/logIn')
+            return render(request, 'not_logIn.html')
+    return inner
 
 
 # 用户注册
@@ -22,7 +57,7 @@ def register(request):
         now_time = datetime.datetime.now().strftime('%Y%m%d')
         # print(now_time)
         # print(birthday)
-        print( 'VALUES(1, "{}", {}, "{}" , "{}", {}, {})'.format(name, now_time, email, pwd, birthday, gender))
+        print('VALUES(1, "{}", {}, "{}" , "{}", {}, {})'.format(name, now_time, email, pwd, birthday, gender))
         # 异常检测
         if name == '':
             message = 'The name can not be none'
@@ -55,6 +90,14 @@ def register(request):
             # 提交到数据库执行
             db.commit()
             print('execute sql success')
+            # 设置session
+            request.session['is_signup'] = '1'
+            request.session['email'] = email
+            test_signup = request.session.get('is_signup')
+            test_email = request.session.get('email')
+            print('test_signup', test_signup)
+            print('test_email', test_email)
+            # return redirect('/user/successRegisted')
             return render(request, 'successRegisted.html')
             # return render(request, 'home')
         except:
@@ -103,6 +146,11 @@ def logIn(request):
                     # 判断密码是否正确
                     if db_pwd == pwd:
                         print("log in success")
+                        # 设置session
+                        request.session['is_login'] = '1'
+                        request.session['email'] = email
+                        # 设置session7秒后失效
+                        # request.session.set_expiry(7)
                         return render(request, 'home.html')
                     else:
                         print('pwd not true')
@@ -134,15 +182,45 @@ def logIn(request):
 
 
 # 用户主页
+# 检查是否登陆
+@check_login
 def home(request):
+    email = request.session.get("email")
+    print(email)
+    # 删除会话 是否已经注册
     return render(request, 'home.html')
 
 
 # 自己的简历
+@check_login
 def me(request):
+    email = request.session.get('email')
+    print(email)
     return render(request, 'me.html')
 
 
 # 写博客
+@check_login
 def writeBlog(request):
     return render(request, 'writeblog.html')
+
+
+# 成功注册之后进行登陆
+def successRegisted(request):
+    ret = request.session.get("is_signup")
+    # 删除会话 是否已经注册
+    del request.session['is_signup']
+    if ret == '1':
+        request.session['is_login'] = '1'
+        return redirect('/user/home')
+    else:
+        return redirect('/user/register')
+
+
+# 退出登陆
+@check_login
+def logOut(request):
+    # 删除会话记录
+    del request.session['is_login']
+    del request.session['email']
+    return redirect('/user/logIn')
