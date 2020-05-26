@@ -36,7 +36,7 @@ def check_login(func):
             # next_url = request.path_info
             # return redirect("/app02/login/?next={}".format(next_url))
             # return redirect('/user/logIn')
-            return render(request, 'not_logIn.html')
+            return render(request, 'notLogIn.html')
     return inner
 
 
@@ -191,12 +191,96 @@ def home(request):
     return render(request, 'home.html')
 
 
-# 自己的简历
+# 自己的简历信息
 @check_login
 def me(request):
     email = request.session.get('email')
     print(email)
-    return render(request, 'me.html')
+    # 连接数据库
+    db = pymysql.connect(host='localhost', port=3306, user='root', passwd='', db='food_blog', charset='utf8mb4')
+    # 创建游标
+    cursor = db.cursor()
+    # SQL 查询语句
+    sql1 = 'SELECT ID, user_name, user_pass, user_birthday, gender FROM user WHERE user_email = "{}"'.format(email)
+
+    try:
+        # 执行SQL 1 语句
+        cursor.execute(sql1)
+        # 获取所有记录列表
+        if cursor is not None:  # 注意这里。单纯判断cursor是否为None是不够的
+            result = cursor.fetchone()
+            print('result', result)
+            # 判断是否有此用户
+            if result is not None:
+                db_ID = result[0]
+                db_name = result[1]
+                db_pass = result[2]
+                db_birthday = result[3]
+                db_gender = result[4]
+
+            else:
+                print('result is  None')
+                print('this user not exist')
+                message = 'this user not exist, please reload this page or log in again'
+                return render(request, 'me.html', {'message': message})
+        else:
+            print('cursor is None')
+            print('this user not exist')
+            message = 'this user not exist, please reload this page or log in again'
+            return render(request, 'me.html', {'message': message})
+        print('execute sql 1 success')
+
+        sql2 = 'SELECT brief_info, phone, blog_url, user_identity, other FROM user_info_plus WHERE ID = "{}";'.format(db_ID)
+        # 执行SQL 2 语句
+        cursor.execute(sql2)
+        # 获取所有记录列表
+        if cursor is not None:  # 注意这里。单纯判断cursor是否为None是不够的
+            result = cursor.fetchone()
+            print('result', result)
+            # 判断是否有此用户的附加信息
+            if result is not None:
+                db_brief_info = result[0]
+                db_phone = result[1]
+                db_blog_url = result[2]
+                db_identity = result[3]
+                db_other = result[4]
+            else:  # 如果没有就使用默认的信息
+                db_brief_info = "your brief information"
+                db_phone = "your phone"
+                db_blog_url = "https://www.baidu.com/"
+                db_identity = "engineer"
+                db_other = "other information about you"
+        else:  # 如果没有就使用默认的信息
+            db_brief_info = "your brief information"
+            db_phone = "your phone"
+            db_blog_url = "https://www.baidu.com/"
+            db_identity = "engineer"
+            db_other = "other information about you"
+        print('execute sql 2 success')
+    except:
+        db.rollback()
+        print('rollback')
+        message = 'something error, please reload this page or log in again'
+        return render(request, 'me.html', {'message': message})
+
+    cursor.close()
+    # 关闭数据库连接
+    db.close()
+    print('close db')
+
+    info = {
+        'ID': db_ID,
+        'name': db_name,
+        'pwd': db_pass,
+        'birthday': db_birthday,
+        'gender': db_gender,
+        'brief_info': db_brief_info,
+        'phone': db_phone,
+        'blog_url': db_blog_url,
+        'identity': db_identity,
+        'other': db_other,
+    }
+    return render(request, 'me.html', {'info': info})
 
 
 # 写博客
