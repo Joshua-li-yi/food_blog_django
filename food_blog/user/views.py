@@ -111,7 +111,6 @@ def register(request):
         # 关闭数据库连接
         db.close()
         print('close db')
-
         # print(email, name, pwd)
 
     elif request.method =='GET':
@@ -152,8 +151,6 @@ def logIn(request):
                         # 设置session7秒后失效
                         # request.session.set_expiry(7)
                         return render(request, 'home.html')
-                    else:
-                        print('pwd not true')
                         message = 'the pwd is not true, please input again'
                         return render(request, 'logIn.html', {'message': message})
                 else:
@@ -191,6 +188,7 @@ def home(request):
     return render(request, 'home.html')
 
 
+# TODO(ly, 20200526): 还要添加编辑页面的按钮
 # 自己的简历信息
 @check_login
 def me(request):
@@ -230,7 +228,7 @@ def me(request):
             return render(request, 'me.html', {'message': message})
         print('execute sql 1 success')
 
-        sql2 = 'SELECT brief_info, phone, blog_url, user_identity, other FROM user_info_plus WHERE ID = "{}";'.format(db_ID)
+        sql2 = 'SELECT brief_info, phone, blog_url, user_identity, other, city, qq, wechat  FROM user_info_plus WHERE ID = "{}";'.format(db_ID)
         # 执行SQL 2 语句
         cursor.execute(sql2)
         # 获取所有记录列表
@@ -244,18 +242,27 @@ def me(request):
                 db_blog_url = result[2]
                 db_identity = result[3]
                 db_other = result[4]
+                db_city = result[5]
+                db_qq = result[6]
+                db_wechat = result[7]
             else:  # 如果没有就使用默认的信息
                 db_brief_info = "your brief information"
-                db_phone = "your phone"
+                db_phone = "123456"
                 db_blog_url = "https://www.baidu.com/"
-                db_identity = "engineer"
+                db_identity = "student"
                 db_other = "other information about you"
+                db_city = "beijing"
+                db_qq = '123456789'
+                db_wechat = '123456789'
         else:  # 如果没有就使用默认的信息
             db_brief_info = "your brief information"
-            db_phone = "your phone"
+            db_phone = "123456"
             db_blog_url = "https://www.baidu.com/"
-            db_identity = "engineer"
+            db_identity = "student"
             db_other = "other information about you"
+            db_city = "beijing"
+            db_qq = '123456789'
+            db_wechat = '123456789'
         print('execute sql 2 success')
     except:
         db.rollback()
@@ -279,6 +286,10 @@ def me(request):
         'blog_url': db_blog_url,
         'identity': db_identity,
         'other': db_other,
+        'email': email,
+        'city': db_city,
+        'qq': db_qq,
+        'wechat': db_wechat,
     }
     return render(request, 'me.html', {'info': info})
 

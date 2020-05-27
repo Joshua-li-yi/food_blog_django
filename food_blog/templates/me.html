@@ -17,7 +17,7 @@
 <body>
 <div>
     {% if message %}
-            <div class="alert alert-warning">{{ message }}</div>
+        <div class="alert alert-warning">{{ message }}</div>
     {% endif %}
     {#    导航栏#}
     <div class="row">
@@ -37,123 +37,87 @@
         </ul>
     </div>
     {#    简历开始页#}
-
-    <div id="myTabContent" class="tab-content">
-        <div class="tab-pane fade active show" id="Profile">
-            <div class="container bg-dark text-light">
-                <div id="wrapper">
-                    <div class="header text-primary clearfix ">
+    {% if info %}
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active show" id="Profile">
+                <div class="container bg-dark text-light">
+                    <div id="wrapper">
                         <!-- <div class="image">
                             <img src="img/messi.jpg" alt="messi" class="img-thumbail img-responsive ">
                         </div> -->
                         {#                昵称和基本介绍#}
                         <div class="content">
-                            <h1 class="display-4">Joshua_yi</h1>
-                            <h2 class="lead">Web designer & Developer</h2>
+                            <h1 class="display-4">{{ info.name }}</h1>
+                            <h2 class="lead"><i class="fa fa-id-card-o" style="color: #00bc8c"></i>&nbsp;&nbsp;&nbsp;<u><I> {{ info.identity }}</I> </u></h2>
                         </div>
                     </div>
                     <hr class="my-auto">
-                    <div class="row row-info">
+                    <div class="row row-info" style="margin-left: 30px">
                         <div class="col-md-5">
                             <h3 class="col-header-title text-success"><i class="fa fa-user-circle-o"></i> About me</h3>
-
-                            <p>My name is Nguyen Quoc Cuong. I'm 23 years old. I am a final student in Da Nang
-                                University Of Technology .
-                                My major is Information Technology.</p>
-
-                            <p>Especialy, I have experience and passion about Web Developer</p>
+                            <p>{{ info.brief_info }}</p>
                         </div>
 
                         <div class="col-md-5 offset-md-2">
 
-                            <h3 class="col-header-title text-success"><i class="fa fa-star-o"></i>Contact</h3>
-
+                            <h3 class="col-header-title text-success"><i class="fa fa-star-o fa-spin"></i>Contact</h3>
                             <table>
                                 <tr>
-                                    <td class="td1">Facebook</td>
-                                    <td><a href="http://www.facebook.com/wolf.ccc">facebook.com/wolf.ccc </a></td>
+                                    <td class="td1"><i class="fa fa-envelope" style="color: #00bc8c"></i></td>
+                                    <td><u>{{ info.email }} </u></td>
                                 </tr>
                                 <tr>
-                                    <td class="td1">Github</td>
-                                    <td><a href="https://github.com/Wolf2101">github.com/Wolf2101</a></td>
+                                    <td class="td1"><i class="fa fa-internet-explorer" style="color: #00bc8c"></i></td>
+                                    <td><a href="{{ info.blog_url }}" target="_blank">{{ info.blog_url }}</a></td>
                                 </tr>
                                 <tr>
-                                    <td class="td1">Email</td>
-                                    <td><a href="mailto:cuongnq211@gmail.com?subject=Dear20%Mr20%Cuong">cuongnq211@gmail.com</a>
-                                    </td>
+                                    <td class="td1"><i class="fa fa-phone" style="color: #00bc8c"></i></td>
+                                    <td>{{ info.phone }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="td1">Phone</td>
-                                    <td>01664191601</td>
+                                    <td class="td1"><i class="fa fa-qq" style="color: #00bc8c"></i></td>
+                                    <td>{{ info.qq }}</td>
                                 </tr>
+
                                 <tr>
-                                    <td class="td1">City</td>
-                                    <td>Danang</td>
+                                    <td class="td1"><i class="fa fa-weixin" style="color: #00bc8c"></i></td>
+                                    <td>{{ info.wechat }}</td>
                                 </tr>
+
+                                <tr>
+                                    <td class="td1"><i class="fa fa-street-view" style="color: #00bc8c"></i></td>
+                                    <td>{{ info.city }}</td>
+                                </tr>
+
                             </table>
                         </div>
                     </div>
-                    <hr class="my-auto">
-                    <div class="row row-info">
-                        <div class="col-md-6">
-                            <h3 class="col-header-title text-success"><i class="fa fa-graduation-cap"></i> Education &
-                                Experience </h3>
 
-                            <table>
-                                <tr>
-                                    <td valign="top" class="text-warning">
-                                        2013-2018
-                                    </td>
-                                    <td valign="top">
-                                        <strong> Da Nang University Of Technology </strong> <br> I study there for 5
-                                        year. My major is Information technology.
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td valign="top" class="text-warning">05/2017-10/2017</td>
-                                    <td valign="top">
-                                        <strong> BAP Company </strong> <br> I'm Node JS Internship for 5 months there.
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td valign="top" class="text-warning">Currently</td>
-                                    <td valign="top">
-                                        <strong> DAC Tech Viet Nam Company </strong> <br> I being trained here at PHP
-                                        Internship position.
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="col-md-5 offset-md-1">
-                            <h3 class="col-header-title text-success"><i class="fa fa-book"></i> Skill & Language</h3>
-                            <ul>
-                                <li>Front-End (Html, css, javascript...)</li>
-                                <li>Back-End (PHP,Node Js)</li>
-                                <li>Other language (C, C++ ,Java...)</li>
-                                <li>Team work (listening, personal idea...)</li>
-                                <li>Good Atitude (Never stop learning, improving...)</li>
-                            </ul>
-                        </div>
-                    </div>
                     <hr class="my-auto">
-                    <div class="row row-info">
-                        <div class="col-md-12">
-                            <h3 class="col-header-title text-success"><i class="fa fa-file"></i> Some Project </h3>
+                    <div class="row row-info" style="margin-left: 30px">
+                        <div class="col-md-5">
+                            <h3 class="col-header-title text-success"><i class="fa fa-file"></i> Basic &nbsp; Information </h3>
                             <ul>
-                                <li>Manage Student using C++ .</li>
-                                <li>Website order(only sell) and ship Flower using PHP.</li>
-                                <li>Website Manage vacxin using JSP Servlet MVC.</li>
-                                <li>Website order (buy/sell) gift card using Node Js.</li>
-                                <li>Website Manage user for app chat, API for app chat using Node Js.</li>
-                                <li>App Music on Androind.</li>
+                                <li><i class="fa fa-id-card" style="color: #00bc8c"></i>&nbsp;&nbsp; {{ info.ID }}</li>
+                                <li><i class="fa fa-venus-mars" style="color: #00bc8c"></i>&nbsp;&nbsp; {{ info.gender }}</li>
+                                <li><i class="fa fa-birthday-cake" style="color: #00bc8c"></i>&nbsp;&nbsp; {{ info.birthday }}</li>
+                                <li><i class="fa fa-key" style="color: #00bc8c"></i>&nbsp;&nbsp; {{ info.pwd }}</li>
+
                             </ul>
                         </div>
+                          <div class="col-md-5 offset-md-2">
+
+                            <h3 class="col-header-title text-success"><i class="fa fa-heart fa-spin "></i>OTHER</h3>
+                            <p>{{ info.other }}</p>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
 
-    </div>
+        </div>
+    {% endif %}
 </div>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
