@@ -8,4 +8,5 @@ urlpatterns = [
     path(r'writeBlog', views.writeBlog),
     path(r'successRegisted', views.successRegisted),
     path(r'logOut', views.logOut),
+    path(r'alterInfo', views.alter_info),
 ]

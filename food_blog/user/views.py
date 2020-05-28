@@ -188,7 +188,7 @@ def home(request):
     return render(request, 'home.html')
 
 
-# TODO(ly, 20200526): 还要添加编辑页面的按钮
+# TODO(ly, 20200526): 以基本完成
 # 自己的简历信息
 @check_login
 def me(request):
@@ -275,12 +275,14 @@ def me(request):
     db.close()
     print('close db')
 
+    gender = ['female', 'male'][db_gender]
+
     info = {
         'ID': db_ID,
         'name': db_name,
         'pwd': db_pass,
         'birthday': db_birthday,
-        'gender': db_gender,
+        'gender': gender,
         'brief_info': db_brief_info,
         'phone': db_phone,
         'blog_url': db_blog_url,
@@ -318,4 +320,23 @@ def logOut(request):
     # 删除会话记录
     del request.session['is_login']
     del request.session['email']
+    return redirect('/user/logIn')
+
+
+# TODO (ly, 20200529): 还需添加修改用户信息
+# 修改用户信息
+@check_login
+def alter_info(request):
+    if request.method == 'POST':
+        # 获取用户名和密码
+        # email = request.POST.get('email')
+        name = request.POST.get('userName')
+        print(name)
+    return 0
+
+
+# TODO (ly, 20200529): 还需添加注销用户
+# 注销用户
+@check_login
+def delete_user(request):
     return redirect('/user/logIn')

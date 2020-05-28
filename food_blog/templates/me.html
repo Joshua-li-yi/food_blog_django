@@ -31,93 +31,110 @@
             </li>
             {#            退出登陆#}
             <li class="nav-item el-col-md-offset-4">
+                <a class="nav-link " type="button" id='changeInfo'
+                   style="background-color:#343434; margin-right: -10px">Change Info</a>
+            </li>
+            <li class="nav-item el-col-md-offset-4">
                 <a class="nav-link " href="/user/logOut" type="button"
                    style="background-color:#343434; margin-right: -10px">Log Out</a>
             </li>
         </ul>
     </div>
+
     {#    简历开始页#}
-    {% if info %}
-        <div id="myTabContent" class="tab-content">
-            <div class="tab-pane fade active show" id="Profile">
-                <div class="container bg-dark text-light">
-                    <div id="wrapper">
-                        <!-- <div class="image">
-                            <img src="img/messi.jpg" alt="messi" class="img-thumbail img-responsive ">
-                        </div> -->
-                        {#                昵称和基本介绍#}
-                        <div class="content">
-                            <h1 class="display-4">{{ info.name }}</h1>
-                            <h2 class="lead"><i class="fa fa-id-card-o" style="color: #00bc8c"></i>&nbsp;&nbsp;&nbsp;<u><I> {{ info.identity }}</I> </u></h2>
+    <form method="post" action="/user/alterInfo">
+        {% if info %}
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane fade active show" id="Profile">
+                    <div class="container bg-dark text-light">
+                        <div id="wrapper">
+                            <!-- <div class="image">
+                                <img src="img/messi.jpg" alt="messi" class="img-thumbail img-responsive ">
+                            </div> -->
+                            {#                昵称和基本介绍#}
+                            <div class="content">
+                                {#                            contentEditable 可以改变文本的编辑状态#}
+                                <h1 class="display-4" contentEditable=false id='userName'>{{ info.name }}</h1>
+                                <h2 class="lead" contenteditable=false id='userIdentity'><i class="fa fa-id-card-o"
+                                                                                            style="color: #00bc8c"></i>&nbsp;&nbsp;&nbsp;<u><I> {{ info.identity }}</I>
+                                </u></h2>
+                            </div>
                         </div>
-                    </div>
-                    <hr class="my-auto">
-                    <div class="row row-info" style="margin-left: 30px">
-                        <div class="col-md-5">
-                            <h3 class="col-header-title text-success"><i class="fa fa-user-circle-o"></i> About me</h3>
-                            <p>{{ info.brief_info }}</p>
+                        <hr class="my-auto">
+                        <div class="row row-info" style="margin-left: 30px">
+                            <div class="col-md-5">
+                                 <h3 class="col-header-title text-success"><i class="fa fa-file"></i> Basic &nbsp;
+                                    Information </h3>
+                                <ul>
+                                    <li><i class="fa fa-id-card" style="color: #00bc8c"></i>&nbsp;&nbsp; {{ info.ID }}
+                                    </li>
+                                    <li><i class="fa fa-venus-mars"
+                                           style="color: #00bc8c"></i>&nbsp;&nbsp; {{ info.gender }}</li>
+                                    <li><i class="fa fa-birthday-cake"
+                                           style="color: #00bc8c"></i>&nbsp;&nbsp; {{ info.birthday }}</li>
+                                    <li><i class="fa fa-key" style="color: #00bc8c"></i>&nbsp;&nbsp; {{ info.pwd }}</li>
+
+                                </ul>
+
+                            </div>
+
+                            <div class="col-md-5 offset-md-2">
+
+                                <h3 class="col-header-title text-success"><i class="fa fa-star-o fa-spin"></i>Contact
+                                </h3>
+                                <table>
+                                    <tr>
+                                        <td class="td1"><i class="fa fa-envelope" style="color: #00bc8c"></i></td>
+                                        <td><u>{{ info.email }} </u></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="td1"><i class="fa fa-internet-explorer" style="color: #00bc8c"></i>
+                                        </td>
+                                        <td><a href="{{ info.blog_url }}" target="_blank">{{ info.blog_url }}</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="td1"><i class="fa fa-phone" style="color: #00bc8c"></i></td>
+                                        <td>{{ info.phone }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="td1"><i class="fa fa-qq" style="color: #00bc8c"></i></td>
+                                        <td>{{ info.qq }}</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="td1"><i class="fa fa-weixin" style="color: #00bc8c"></i></td>
+                                        <td>{{ info.wechat }}</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="td1"><i class="fa fa-street-view" style="color: #00bc8c"></i></td>
+                                        <td>{{ info.city }}</td>
+                                    </tr>
+
+                                </table>
+                            </div>
                         </div>
 
-                        <div class="col-md-5 offset-md-2">
+                        <hr class="my-auto">
+                        <div class="row row-info" style="margin-left: 30px">
+                            <div class="col-md-5">
+                                <h3 class="col-header-title text-success"><i class="fa fa-user-circle-o"></i> About me
+                                </h3>
+                                <p>{{ info.brief_info }}</p>
+                            </div>
+                            <div class="col-md-5 offset-md-2">
 
-                            <h3 class="col-header-title text-success"><i class="fa fa-star-o fa-spin"></i>Contact</h3>
-                            <table>
-                                <tr>
-                                    <td class="td1"><i class="fa fa-envelope" style="color: #00bc8c"></i></td>
-                                    <td><u>{{ info.email }} </u></td>
-                                </tr>
-                                <tr>
-                                    <td class="td1"><i class="fa fa-internet-explorer" style="color: #00bc8c"></i></td>
-                                    <td><a href="{{ info.blog_url }}" target="_blank">{{ info.blog_url }}</a></td>
-                                </tr>
-                                <tr>
-                                    <td class="td1"><i class="fa fa-phone" style="color: #00bc8c"></i></td>
-                                    <td>{{ info.phone }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="td1"><i class="fa fa-qq" style="color: #00bc8c"></i></td>
-                                    <td>{{ info.qq }}</td>
-                                </tr>
-
-                                <tr>
-                                    <td class="td1"><i class="fa fa-weixin" style="color: #00bc8c"></i></td>
-                                    <td>{{ info.wechat }}</td>
-                                </tr>
-
-                                <tr>
-                                    <td class="td1"><i class="fa fa-street-view" style="color: #00bc8c"></i></td>
-                                    <td>{{ info.city }}</td>
-                                </tr>
-
-                            </table>
+                                <h3 class="col-header-title text-success"><i class="fa fa-heart fa-spin "></i>OTHER</h3>
+                                <p>{{ info.other }}</p>
+                            </div>
+                                <button class="btn btn-success btn-md btn-lg" type="submit" id='submit'>Submit</button>
                         </div>
-                    </div>
-
-                    <hr class="my-auto">
-                    <div class="row row-info" style="margin-left: 30px">
-                        <div class="col-md-5">
-                            <h3 class="col-header-title text-success"><i class="fa fa-file"></i> Basic &nbsp; Information </h3>
-                            <ul>
-                                <li><i class="fa fa-id-card" style="color: #00bc8c"></i>&nbsp;&nbsp; {{ info.ID }}</li>
-                                <li><i class="fa fa-venus-mars" style="color: #00bc8c"></i>&nbsp;&nbsp; {{ info.gender }}</li>
-                                <li><i class="fa fa-birthday-cake" style="color: #00bc8c"></i>&nbsp;&nbsp; {{ info.birthday }}</li>
-                                <li><i class="fa fa-key" style="color: #00bc8c"></i>&nbsp;&nbsp; {{ info.pwd }}</li>
-
-                            </ul>
-                        </div>
-                          <div class="col-md-5 offset-md-2">
-
-                            <h3 class="col-header-title text-success"><i class="fa fa-heart fa-spin "></i>OTHER</h3>
-                            <p>{{ info.other }}</p>
-                        </div>
-
                     </div>
                 </div>
             </div>
-        </div>
 
-        </div>
-    {% endif %}
+        {% endif %}
+    </form>
 </div>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -128,6 +145,27 @@
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
 </script>
 <script src="/static/js/bootstrap.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        {#将submit按钮平时设置为隐藏状态#}
+        $("#submit").hide();
+        $("#changeInfo").click(function () {
+            if ($("#userName").attr("contentEditable") == 'false') {
+                $("#userName").attr("contentEditable", "true");
+                $("#userIdentity").attr("contentEditable", "true");
+                {#显示submit按钮#}
+                $("#submit").show();
+            } else {
+                $("#userName").attr("contentEditable", "false");
+                $("#userIdentity").attr("contentEditable", "false");
+                {#隐藏submit按钮#}
+                $("#submit").hide();
+            }
+        });
+    });
+</script>
+
 </body>
 
 </html>
