@@ -188,7 +188,6 @@ def home(request):
     return render(request, 'home.html')
 
 
-
 # 自己的简历信息
 @check_login
 def me(request):
@@ -335,7 +334,7 @@ def alter_info(request):
         gender = request.POST.get('gender')
         birthday = request.POST.get('birthday')
         pwd = request.POST.get('pwd')
-        url = request.POST.get('url')
+        blog_url = request.POST.get('url')
         phone = request.POST.get('phone')
         qq = request.POST.get('qq')
         wechat = request.POST.get('wechat')
@@ -345,11 +344,90 @@ def alter_info(request):
 
         print('------------------------')
         print(name)
-    return redirect('/user/me')
+        return redirect('/user/me')
+        print('begin login ')
+        # 连接数据库
+        db = pymysql.connect(host='localhost', port=3306, user='root', passwd='', db='food_blog', charset='utf8mb4')
+        # 创建游标
+        cursor = db.cursor()
+        # SQL 查询语句
+
+        sql = 'UPDATE `user` SET name="{}", gender = {}, user_pass = "{}", user_birthday = "{}" WHERE user_email = "{}";'.format(name, gender, pwd, birthday, email)
+        try:
+            # 执行SQL语句
+            cursor.execute(sql)
+            # 提交到数据库执行
+            db.commit()
+            print('execute sql success')
+
+            info = {
+                'ID': db_ID,
+                'name': name,
+                'pwd': pwd,
+                'birthday': birthday,
+                'gender': gender,
+                'brief_info': brief_info,
+                'phone': phone,
+                'blog_url': blog_url,
+                'identity': identity,
+                'other': other,
+                'email': email,
+                'city': city,
+                'qq': qq,
+                'wechat': wechat,
+            }
+            return render(request, 'me.html', {'info': info})
+        except:
+            db.rollback()
+            print('rollback')
+            message = 'something error when log in'
+            print(message)
+            return render(request, 'logIn.html', {'message': message})
+        cursor.close()
+        # 关闭数据库连接
+        db.close()
+        print('close db')
+    elif request.method =='GET':
+        return redirect('/user/me')
 
 
 # TODO (ly, 20200529): 还需添加注销用户
 # 注销用户
 @check_login
 def delete_user(request):
+    # 删除会话记录
+    del request.session['is_login']
+    del request.session['email']
     return redirect('/user/logIn')
+
+
+# TODO(ly, 20200530): 还需完成保存草稿到数据库
+# 保存草稿
+@check_login
+def save_draft(request):
+    print('---------save blog draft ---------')
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        blog_content = request.POST.get('blog')
+        print('------------------------------')
+        print(title)
+        print(blog_content)
+        return redirect('/user/home')
+    else:
+        return redirect('/user/writeBlog')
+
+
+# TODO(ly,20200530): 还需完成发布文章
+# 发布文章
+@check_login
+def blog_deploy(request):
+    print('-------blog deploy--------')
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        blog_content = request.POST.get('blog')
+        print('------------------------------')
+        print(title)
+        print(blog_content)
+        return redirect('/user/home')
+    else:
+        return redirect('/user/writeBlog')
