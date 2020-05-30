@@ -188,7 +188,7 @@ def home(request):
     return render(request, 'home.html')
 
 
-# TODO(ly, 20200526): 以基本完成
+
 # 自己的简历信息
 @check_login
 def me(request):
@@ -323,16 +323,29 @@ def logOut(request):
     return redirect('/user/logIn')
 
 
-# TODO (ly, 20200529): 还需添加修改用户信息
+# TODO (ly, 20200529): 还需和数据库交互
 # 修改用户信息
 @check_login
 def alter_info(request):
+    email = request.session.get('email')
     if request.method == 'POST':
         # 获取用户名和密码
-        # email = request.POST.get('email')
-        name = request.POST.get('userName')
+        name = request.POST.get('name')
+        identity = request.POST.get('identity')
+        gender = request.POST.get('gender')
+        birthday = request.POST.get('birthday')
+        pwd = request.POST.get('pwd')
+        url = request.POST.get('url')
+        phone = request.POST.get('phone')
+        qq = request.POST.get('qq')
+        wechat = request.POST.get('wechat')
+        city = request.POST.get('city')
+        biref_info = request.POST.get('info')
+        other = request.POST.get('other')
+
+        print('------------------------')
         print(name)
-    return 0
+    return redirect('/user/me')
 
 
 # TODO (ly, 20200529): 还需添加注销用户

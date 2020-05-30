@@ -54,25 +54,49 @@
                             {#                昵称和基本介绍#}
                             <div class="content">
                                 {#                            contentEditable 可以改变文本的编辑状态#}
-                                <h1 class="display-4" contentEditable=false id='userName'>{{ info.name }}</h1>
+
+                                <h1 class="display-4" contentEditable=false><label for='userName'></label><input
+                                        id='userName' readonly="readonly" type="text" name="name"
+                                        value="{{ info.name }}"
+                                        style="background-color: #303030; border:#303030; color: #adb5bd "></h1>
                                 <h2 class="lead" contenteditable=false id='userIdentity'><i class="fa fa-id-card-o"
-                                                                                            style="color: #00bc8c"></i>&nbsp;&nbsp;&nbsp;<u><I> {{ info.identity }}</I>
-                                </u></h2>
+                                                                                            style="color: #00bc8c"></i>&nbsp;&nbsp;&nbsp;<I>
+                                    <label for='userIdentity'></label><input id='userIdentity' readonly="readonly"
+                                                                             type="text" name="identity"
+                                                                             value="{{ info.identity }}"
+                                                                             style="background-color: #303030; border:#303030; color: #adb5bd "></I>
+                                </h2>
                             </div>
                         </div>
                         <hr class="my-auto">
                         <div class="row row-info" style="margin-left: 30px">
                             <div class="col-md-5">
-                                 <h3 class="col-header-title text-success"><i class="fa fa-file"></i> Basic &nbsp;
+                                <h3 class="col-header-title text-success"><i class="fa fa-file"></i> Basic &nbsp;
                                     Information </h3>
                                 <ul>
                                     <li><i class="fa fa-id-card" style="color: #00bc8c"></i>&nbsp;&nbsp; {{ info.ID }}
                                     </li>
                                     <li><i class="fa fa-venus-mars"
-                                           style="color: #00bc8c"></i>&nbsp;&nbsp; {{ info.gender }}</li>
+                                           style="color: #00bc8c"></i>&nbsp;&nbsp;<label
+                                            for='userGender'></label><input id='userGender' readonly="readonly"
+                                                                            type="text" name="gender"
+                                                                            value="{{ info.gender }}"
+                                                                            style="background-color: #303030; border:#303030; color: #adb5bd ">
+                                    </li>
                                     <li><i class="fa fa-birthday-cake"
-                                           style="color: #00bc8c"></i>&nbsp;&nbsp; {{ info.birthday }}</li>
-                                    <li><i class="fa fa-key" style="color: #00bc8c"></i>&nbsp;&nbsp; {{ info.pwd }}</li>
+                                           style="color: #00bc8c"></i>&nbsp;&nbsp; <input id='userBirthday'
+                                                                                          readonly="readonly"
+                                                                                          type="text" name="birthday"
+                                                                                          value="{{ info.birthday }}"
+                                                                                          style="background-color: #303030; border:#303030; color: #adb5bd ">
+                                    </li>
+                                    <li><i class="fa fa-key" style="color: #00bc8c"></i>&nbsp;&nbsp; <input id='userPwd'
+                                                                                                            readonly="readonly"
+                                                                                                            type="text"
+                                                                                                            name="pwd"
+                                                                                                            value="{{ info.pwd }}"
+                                                                                                            style="background-color: #303030; border:#303030; color: #adb5bd ">
+                                    </li>
 
                                 </ul>
 
@@ -88,27 +112,43 @@
                                         <td><u>{{ info.email }} </u></td>
                                     </tr>
                                     <tr>
-                                        <td class="td1"><i class="fa fa-internet-explorer" style="color: #00bc8c"></i>
+                                        <td class="td1"><a href="{{ info.blog_url }}" target="_blank"><i
+                                                class="fa fa-internet-explorer" style="color: #00bc8c"></i></a>
                                         </td>
-                                        <td><a href="{{ info.blog_url }}" target="_blank">{{ info.blog_url }}</a></td>
+                                        <td><input id='userUrl' readonly="readonly" type="text" name="url"
+                                                   value="{{ info.blog_url }}"
+                                                   style="background-color: #303030; border:#303030; color: #adb5bd ">
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td class="td1"><i class="fa fa-phone" style="color: #00bc8c"></i></td>
-                                        <td>{{ info.phone }}</td>
+                                        <td><input id='userPhone' readonly="readonly" type="text" name="phone"
+                                                   value="{{ info.phone }}"
+                                                   style="background-color: #303030; border:#303030; color: #adb5bd ">
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td class="td1"><i class="fa fa-qq" style="color: #00bc8c"></i></td>
-                                        <td>{{ info.qq }}</td>
+                                        <td><input id='userQQ' readonly="readonly" type="text" name="QQ"
+                                                   value="{{ info.qq }}"
+                                                   style="background-color: #303030; border:#303030; color: #adb5bd ">
+                                        </td>
                                     </tr>
 
                                     <tr>
                                         <td class="td1"><i class="fa fa-weixin" style="color: #00bc8c"></i></td>
-                                        <td>{{ info.wechat }}</td>
+                                        <td><input id='userWechat' readonly="readonly" type="text" name="wechat"
+                                                   value="{{ info.wechat }}"
+                                                   style="background-color: #303030; border:#303030; color: #adb5bd ">
+                                        </td>
                                     </tr>
 
                                     <tr>
                                         <td class="td1"><i class="fa fa-street-view" style="color: #00bc8c"></i></td>
-                                        <td>{{ info.city }}</td>
+                                        <td><input id='userCity' readonly="readonly" type="text" name="city"
+                                                   value="{{ info.city }}"
+                                                   style="background-color: #303030; border:#303030; color: #adb5bd ">
+                                        </td>
                                     </tr>
 
                                 </table>
@@ -120,14 +160,18 @@
                             <div class="col-md-5">
                                 <h3 class="col-header-title text-success"><i class="fa fa-user-circle-o"></i> About me
                                 </h3>
-                                <p>{{ info.brief_info }}</p>
+                                <p><input id='userInfo' readonly="readonly" type="text" name="info"
+                                          value="{{ info.brief_info }}"
+                                          style="background-color: #303030; border:#303030; color: #adb5bd "></p>
                             </div>
                             <div class="col-md-5 offset-md-2">
 
                                 <h3 class="col-header-title text-success"><i class="fa fa-heart fa-spin "></i>OTHER</h3>
-                                <p>{{ info.other }}</p>
+                                <p><input id='userOther' readonly="readonly" type="text" name="other"
+                                          value="{{ info.other }}"
+                                          style="background-color: #303030; border:#303030; color: #adb5bd "></p>
                             </div>
-                                <button class="btn btn-success btn-md btn-lg" type="submit" id='submit'>Submit</button>
+                            <button class="btn btn-success btn-md btn-lg" type="submit" id='submit'>Submit</button>
                         </div>
                     </div>
                 </div>
@@ -146,26 +190,53 @@
 </script>
 <script src="/static/js/bootstrap.js"></script>
 
+
+</body>
+
+</html>
 <script type="text/javascript">
     $(document).ready(function () {
         {#将submit按钮平时设置为隐藏状态#}
         $("#submit").hide();
+        {#console.log($("#userName").attr("readonly"));#}
+        {#点击之后将改变input的编辑状态，将不可编辑状态改成可以编辑状态#}
         $("#changeInfo").click(function () {
-            if ($("#userName").attr("contentEditable") == 'false') {
-                $("#userName").attr("contentEditable", "true");
-                $("#userIdentity").attr("contentEditable", "true");
+            if ($("#userName").attr("readonly") === 'readonly') {
+                {#去掉该属性#}
+                $("#userName").removeAttr('readonly');
+                $("#userIdentity").removeAttr('readonly');
+                $("#userGender").removeAttr('readonly');
+                $("#userBirthday").removeAttr('readonly');
+
+                $("#userPwd").removeAttr('readonly');
+                $("#userUrl").removeAttr('readonly');
+                $("#userPhone").removeAttr('readonly');
+                $("#userQQ").removeAttr('readonly');
+                $("#userWechat").removeAttr('readonly');
+                $("#userCity").removeAttr('readonly');
+                $("#userInfo").removeAttr('readonly');
+                $("#userOther").removeAttr('readonly');
+
                 {#显示submit按钮#}
                 $("#submit").show();
             } else {
-                $("#userName").attr("contentEditable", "false");
-                $("#userIdentity").attr("contentEditable", "false");
+                {#设置为只读#}
+                $("#userName").attr("readonly", "readonly");
+                $("#userIdentity").attr("readonly", "readonly");
+                $("#userGender").attr("readonly", "readonly");
+                $("#userBirthday").attr("readonly", "readonly");
+                $("#userPwd").attr("readonly", "readonly");
+                $("#userUrl").attr("readonly", "readonly");
+                $("#userPhone").attr("readonly", "readonly");
+                $("#userQQ").attr("readonly", "readonly");
+                $("#userWechat").attr("readonly", "readonly");
+                $("#userCity").attr("readonly", "readonly");
+                $("#userInfo").attr("readonly", "readonly");
+                $("#userOther").attr("readonly", "readonly");
+
                 {#隐藏submit按钮#}
                 $("#submit").hide();
             }
         });
     });
 </script>
-
-</body>
-
-</html>
