@@ -428,6 +428,50 @@ def blog_deploy(request):
         print('------------------------------')
         print(title)
         print(blog_content)
+        # 连接数据库
+        db = pymysql.connect(host='localhost', port=3306, user='root', passwd='', db='food_blog', charset='utf8')
+        print('connect db success')
+        # 创建游标
+        cursor = db.cursor()
+
+        # sql语句
+        # （）实现多行字符串连接
+        # ID为自增ID所以不用进行赋值
+        sql = (
+            'INSERT INTO `user`(user_name, user_registered, user_email, user_pass, user_birthday, gender) '
+            # {}作为占位符
+            'VALUES("{}", {}, "{}" , "{}", {}, {})'.format(name, now_time, email, pwd, birthday, gender)
+        )
+
+        try:
+            # 执行sql语句
+            cursor.execute(sql)
+            # 提交到数据库执行
+            db.commit()
+            print('execute sql success')
+            # 设置session
+            request.session['is_signup'] = '1'
+            request.session['email'] = email
+            test_signup = request.session.get('is_signup')
+            test_email = request.session.get('email')
+            print('test_signup', test_signup)
+            print('test_email', test_email)
+            # return redirect('/user/successRegisted')
+            return render(request, 'successRegisted.html')
+            # return render(request, 'home')
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+            print('rollback')
+            message = 'some thing error, data base rollback'
+            return render(request, 'signup.html', {'message': message})
+
+        cursor.close()
+        # 关闭数据库连接
+        db.close()
+        print('close db')
+        # print(email, name, pwd)
+
+    elif request.method == 'GET':
+        return render(request, 'signup.html')
         return redirect('/user/home')
-    else:
-        return redirect('/user/writeBlog')

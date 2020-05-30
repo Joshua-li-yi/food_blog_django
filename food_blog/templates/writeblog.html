@@ -58,10 +58,23 @@
         </div>
     </div>
     <div class="mk-editor row">
-        <textarea id="editor-edit" class="cur" name="blog"></textarea>
+        <textarea id="editor-edit" class="cur" name="blog" >### 111</textarea>
         <div id="editor-show" class="markdown-body" style="background-color:white;"></div>
     </div>
 </form>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+</script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+</script>
+<script src="/static/js/bootstrap.js"></script>
+</body>
+
+</html>
 <script>
     let converter = new showdown.Converter(),
         container_edit = document.getElementById("editor-edit"),
@@ -134,20 +147,9 @@
         }
     })();
 </script>
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
-</script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
-</script>
-<script src="/static/js/bootstrap.js"></script>
-</body>
-
-</html>
 {#两个按钮 同一个form对应两个不同的action#}
 <script type="text/javascript">
+
     function saveDraft() {
         document.blogForm.method = 'POST';
         document.blogForm.action = '/user/saveDraft';
@@ -161,5 +163,6 @@
         document.blogForm.submit();
         return true;
     }
+
 </script>
 
