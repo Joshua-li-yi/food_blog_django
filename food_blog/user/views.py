@@ -5,6 +5,7 @@ import datetime
 # Create your views here.
 # 导入用于装饰器修复技术的包
 from functools import wraps
+
 # Create your views here.
 
 """
@@ -37,12 +38,12 @@ def check_login(func):
             # return redirect("/app02/login/?next={}".format(next_url))
             # return redirect('/user/logIn')
             return render(request, 'notLogIn.html')
+
     return inner
 
 
 # 用户注册
 def register(request):
-
     if request.method == 'POST':
         # 获取表单中的数据
         email = request.POST.get('userEmail')
@@ -62,7 +63,7 @@ def register(request):
         if name == '':
             message = 'The name can not be none'
             return render(request, 'signup.html', {'message': message})
-        if pwd=='':
+        if pwd == '':
             message = 'password can not be none'
             return render(request, 'signup.html', {'message': message})
         if pwd != pwd2:
@@ -113,7 +114,7 @@ def register(request):
         print('close db')
         # print(email, name, pwd)
 
-    elif request.method =='GET':
+    elif request.method == 'GET':
         return render(request, 'signup.html')
 
 
@@ -174,7 +175,7 @@ def logIn(request):
         # 关闭数据库连接
         db.close()
         print('close db')
-    elif request.method =='GET':
+    elif request.method == 'GET':
         return render(request, 'logIn.html')
 
 
@@ -227,7 +228,8 @@ def me(request):
             return render(request, 'me.html', {'message': message})
         print('execute sql 1 success')
 
-        sql2 = 'SELECT brief_info, phone, blog_url, user_identity, other, city, qq, wechat  FROM user_info_plus WHERE ID = "{}";'.format(db_ID)
+        sql2 = 'SELECT brief_info, phone, blog_url, user_identity, other, city, qq, wechat  FROM user_info_plus WHERE ID = "{}";'.format(
+            db_ID)
         # 执行SQL 2 语句
         cursor.execute(sql2)
         # 获取所有记录列表
@@ -322,7 +324,7 @@ def logOut(request):
     return redirect('/user/logIn')
 
 
-# TODO (ly, 20200529): 还需和数据库交互
+# TODO (ly, 20200529): 修改信息还需和数据库交互
 # 修改用户信息
 @check_login
 def alter_info(request):
@@ -352,7 +354,8 @@ def alter_info(request):
         cursor = db.cursor()
         # SQL 查询语句
 
-        sql = 'UPDATE `user` SET name="{}", gender = {}, user_pass = "{}", user_birthday = "{}" WHERE user_email = "{}";'.format(name, gender, pwd, birthday, email)
+        sql = 'UPDATE `user` SET name="{}", gender = {}, user_pass = "{}", user_birthday = "{}" WHERE user_email = "{}";'.format(
+            name, gender, pwd, birthday, email)
         try:
             # 执行SQL语句
             cursor.execute(sql)
@@ -387,7 +390,7 @@ def alter_info(request):
         # 关闭数据库连接
         db.close()
         print('close db')
-    elif request.method =='GET':
+    elif request.method == 'GET':
         return redirect('/user/me')
 
 
@@ -401,33 +404,20 @@ def delete_user(request):
     return redirect('/user/logIn')
 
 
-# TODO(ly, 20200530): 还需完成保存草稿到数据库
+# TODO(ly, 20200530): 已经基本完成
 # 保存草稿
 @check_login
 def save_draft(request):
+    email = request.session['email']
     print('---------save blog draft ---------')
     if request.method == 'POST':
         title = request.POST.get('title')
         blog_content = request.POST.get('blog')
-        print('------------------------------')
-        print(title)
-        print(blog_content)
-        return redirect('/user/home')
-    else:
-        return redirect('/user/writeBlog')
+        now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
 
-
-# TODO(ly,20200530): 还需完成发布文章
-# 发布文章
-@check_login
-def blog_deploy(request):
-    print('-------blog deploy--------')
-    if request.method == 'POST':
-        title = request.POST.get('title')
-        blog_content = request.POST.get('blog')
         print('------------------------------')
-        print(title)
-        print(blog_content)
+        # print(title)
+        # print(blog_content)
         # 连接数据库
         db = pymysql.connect(host='localhost', port=3306, user='root', passwd='', db='food_blog', charset='utf8')
         print('connect db success')
@@ -437,41 +427,87 @@ def blog_deploy(request):
         # sql语句
         # （）实现多行字符串连接
         # ID为自增ID所以不用进行赋值
-        sql = (
-            'INSERT INTO `user`(user_name, user_registered, user_email, user_pass, user_birthday, gender) '
-            # {}作为占位符
-            'VALUES("{}", {}, "{}" , "{}", {}, {})'.format(name, now_time, email, pwd, birthday, gender)
-        )
-
+        # {}作为占位符
+        # 两个语句必须分成两次执行
+        sql1 = 'INSERT INTO blog(blog_title, blog_content, blog_modified) ' + 'VALUES("{}", "{}", "{}"); '.format(title,
+                                                                                                                  blog_content,
+                                                                                                           now_time)
+        sql2 = 'INSERT INTO publish_blog(ID, blog_id) ' + 'SELECT ID,LAST_INSERT_ID() FROM `user` WHERE user_email="{}";'.format(email)
+        # print(sql)
         try:
             # 执行sql语句
-            cursor.execute(sql)
+            cursor.execute(sql1)
+            cursor.execute(sql2)
             # 提交到数据库执行
             db.commit()
             print('execute sql success')
-            # 设置session
-            request.session['is_signup'] = '1'
-            request.session['email'] = email
-            test_signup = request.session.get('is_signup')
-            test_email = request.session.get('email')
-            print('test_signup', test_signup)
-            print('test_email', test_email)
-            # return redirect('/user/successRegisted')
-            return render(request, 'successRegisted.html')
-            # return render(request, 'home')
+            # 设置message
+            message = 'blog draft save success'
         except:
             # Rollback in case there is any error
             db.rollback()
             print('rollback')
-            message = 'some thing error, data base rollback'
-            return render(request, 'signup.html', {'message': message})
-
+            message = 'some thing error please resave'
+        return render(request, 'writeblog.html', {'message': message})
         cursor.close()
         # 关闭数据库连接
         db.close()
         print('close db')
-        # print(email, name, pwd)
 
     elif request.method == 'GET':
-        return render(request, 'signup.html')
-        return redirect('/user/home')
+        return redirect('/user/witeBlog')
+
+
+# TODO(ly,20200530): 已经基本完成
+# 发布文章
+@check_login
+def blog_deploy(request):
+    email = request.session['email']
+    print('-------blog deploy--------')
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        blog_content = request.POST.get('blog')
+        now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
+
+        print('------------------------------')
+        # print(title)
+        # print(blog_content)
+        # 连接数据库
+        db = pymysql.connect(host='localhost', port=3306, user='root', passwd='', db='food_blog', charset='utf8')
+        print('connect db success')
+        # 创建游标
+        cursor = db.cursor()
+
+        # sql语句
+        # （）实现多行字符串连接
+        # ID为自增ID所以不用进行赋值
+        # {}作为占位符
+        # 两个语句必须分成两次执行
+        sql1 = 'INSERT INTO blog(blog_title, blog_content, blog_modified) ' + 'VALUES("{}", "{}", "{}"); '.format(title,
+                                                                                                                  blog_content,
+                                                                                                                  now_time)
+        sql2 = 'INSERT INTO publish_blog(ID, blog_id, publish_time) ' + 'SELECT ID,LAST_INSERT_ID(),"{}" FROM `user` WHERE user_email="{}";'.format(
+            now_time, email)
+        # print(sql)
+        try:
+            # 执行sql语句
+            cursor.execute(sql1)
+            cursor.execute(sql2)
+            # 提交到数据库执行
+            db.commit()
+            print('execute sql success')
+            # 设置message
+            message = 'blog deploy success'
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+            print('rollback')
+            message = 'some thing error please redeploy'
+        return render(request, 'writeblog.html', {'message': message})
+        cursor.close()
+        # 关闭数据库连接
+        db.close()
+        print('close db')
+
+    elif request.method == 'GET':
+        return redirect('/user/witeBlog')

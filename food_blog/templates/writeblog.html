@@ -37,28 +37,52 @@
 </head>
 
 <body>
+{% if message %}
+    <div class="modal" id="myModel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">PROMPT</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>{{ message }}</p>
+                </div>
+                <div class="modal-footer">
+                    <a href="/user/home">
+                        <button type="button" class="btn btn-primary">OK</button>
+                    </a>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
 <form class="col-md-12" name="blogForm">
     <div class="row">
 
         <div class="form-group row">
             <label class="col-md-1 col-form-label" style="margin-left: 30px;">Title</label>
             <div class="col-md-5">
-                <input name="title" type="text" class="form-control" id="blogtitle" placeholder="Enter blog title">
+                <input name="title" type="text" class="form-control" id="blogtitle" placeholder="Enter blog title" style="width: 600px">
             </div>
-            <div class="btn-group" role="group" aria-label="Basic example">
+        </div>
+
+            <div class="btn-group" role="group" aria-label="Basic example" style="margin-left: 250px">
                 {#                发布文章#}
-                <button type="submit" class="btn btn-secondary" onclick="deploy()">deploy</button>
+                <a><button type="submit" class="btn btn-secondary" onclick="deploy()">deploy</button></a>
                 {#                保存草稿#}
-                <button type="submit" class="btn btn-secondary" onclick="saveDraft()">save draft</button>
+                <a><button type="submit" class="btn btn-secondary" onclick="saveDraft()">save draft</button></a>
                 {#                返回home页面#}
                 <a href="/user/home">
                     <button type="button" class="btn btn-secondary">Back</button>
                 </a>
             </div>
-        </div>
     </div>
     <div class="mk-editor row">
-        <textarea id="editor-edit" class="cur" name="blog" >### 111</textarea>
+        <textarea id="editor-edit" class="cur" name="blog"></textarea>
         <div id="editor-show" class="markdown-body" style="background-color:white;"></div>
     </div>
 </form>
@@ -146,8 +170,11 @@
             };
         }
     })();
+    {#显示模态框#}
+    $('#myModel').modal('show');
 </script>
 {#两个按钮 同一个form对应两个不同的action#}
+{#{% if message %}#}
 <script type="text/javascript">
 
     function saveDraft() {
@@ -165,4 +192,4 @@
     }
 
 </script>
-
+{#{% endif %}#}
