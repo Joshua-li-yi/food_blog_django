@@ -217,7 +217,6 @@ def home(request):
     # 关闭数据库连接
     db.close()
     print('close db')
-    return render(request, 'home.html')
 
 
 # 自己的简历信息
@@ -503,7 +502,7 @@ def blog_deploy(request):
 
         print('------------------------------')
         # print(title)
-        # print(blog_content)
+        print(blog_content)
         # 连接数据库
         db = pymysql.connect(host='localhost', port=3306, user='root', passwd='', db='food_blog', charset='utf8')
         print('connect db success')
@@ -550,6 +549,8 @@ def see_blog(request, bid):
     # print(bid)
     # 连接数据库
     db = pymysql.connect(host='localhost', port=3306, user='root', passwd='', db='food_blog', charset='utf8mb4')
+    print('connect database success')
+
     # 创建游标
     cursor = db.cursor()
     # SQL 查询语句
@@ -560,7 +561,9 @@ def see_blog(request, bid):
     try:
         # 执行SQL 1 语句
         cursor.execute(sql1)
+        print('execute create view success ')
         cursor.execute(sql2)
+        print('success select data from view')
         # 获取所有记录列表
         if cursor is not None:  # 注意这里。单纯判断cursor是否为None是不够的
             result = cursor.fetchone()
@@ -572,7 +575,11 @@ def see_blog(request, bid):
                 blog['blog_id'] = bid
                 blog['blog_title'] = result[2]
                 blog['blog_abstract'] = result[3]
-                blog['blog_content'] = result[4]
+                # print(result[4])
+                # a = repr(result[4])[1:-1]
+                # print(a)
+                blog['blog_content'] = repr(result[4])[1:-1]
+                print(blog['blog_content'])
                 blog['blog_modified'] = result[5]
             else:
                 print('result is  None')
@@ -591,10 +598,10 @@ def see_blog(request, bid):
         db.rollback()
         print('rollback')
         message = 'something error, please reload this page or log in again'
-        return render(request, 'me.html', {'message': message})
+        return render(request, 'blog.html', {'message': message})
 
     cursor.close()
     # 关闭数据库连接
     db.close()
     print('close db')
-    return render(request, 'blog.html',{'blog': blog})
+    return render(request, 'blog.html', {'blog': blog})

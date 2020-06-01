@@ -9,6 +9,12 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/static/css/bootstrap.css">
     <title>food life</title>
+    {#    限制blog里的图片的宽度#}
+    <style type="text/css">
+        #article img {
+            max-width: 700px;
+        }
+    </style>
 </head>
 
 <body>
@@ -25,12 +31,6 @@
             <li class="nav-item">
                 <a class="nav-link" href="#home" data-toggle="tab">home</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#foodtime" data-toggle="tab">Food Time</a>
-            </li>
-            <!-- <li class="nav-item">
-                <a class="nav-link" href="#" data-toggle="tab">Share</a>
-            </li> -->
             <li class="nav-item">
                 <a class="nav-link" href="#refuseSearchPage" data-toggle="tab">Refuse classification</a>
             </li>
@@ -149,21 +149,21 @@
     {#    # 模板语言循环字典value值与key值 后跟“.items”不加()，已元组输出。#}
 
 
-    <div class="tab-pane" id="foodtime" style="margin-left: 340px;">
-        {% for blog_id, blog_content in blogs.items %}
-            <div class="row" style="margin-top: 25px;">
-                <div class="card col-7">
-                    <div class="card-body">
-                        <h4 class="card-title">{{ blog_content.title }}</h4>
-                        <h6 class="card-subtitle mb-2 text-muted">abstract</h6>
-                        <p class="card-text">{{ blog_content.abstract }}</p>
-                        <a href="#" class="card-link">See{{ blog_id }}</a>
-                        <a href="#" class="card-link">Another link</a>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
+    {#    <div class="tab-pane" id="foodtime" style="margin-left: 340px;">#}
+    {#        {% for blog_id, blog_content in blogs.items %}#}
+    {#            <div class="row" style="margin-top: 25px;">#}
+    {#                <div class="card col-7">#}
+    {#                    <div class="card-body">#}
+    {#                        <h4 class="card-title">{{ blog_content.title }}</h4>#}
+    {#                        <h6 class="card-subtitle mb-2 text-muted">abstract</h6>#}
+    {#                        <p class="card-text">{{ blog_content.abstract }}</p>#}
+    {#                        <a href="#" class="card-link">See{{ blog_id }}</a>#}
+    {#                        <a href="#" class="card-link">Another link</a>#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#        {% endfor %}#}
+    {#    </div>#}
     {#    需要在这里加上active才能在打卡网页时自动显示#}
     {% if blog %}
         <div class="tab-pane active" id="seeBlog">
@@ -172,8 +172,8 @@
         {#                id: blog#}
         {#            </h4>#}
         {#        </div>#}
-        <div class="row">
-            <div class="col-md-3">
+        <div class="row" style="margin-top: 10px">
+            <div class="col-md-3" style="margin-left: 20px">
                 <h3 class="card-header">{{ blog.user_name }}</h3>
                 {#                <div class="card-body">#}
                 {#                    <h5 class="card-title">developer: Joshua</h5>#}
@@ -181,27 +181,28 @@
                 {#                </div>#}
                 {#                <img style="height: 400px; width: 100%; display: block;" src="/static/img/liyi photo.jpg"#}
                 {#                     alt="Card image">#}
-                <div class="card-body">
-                    <p class="card-text">If you have any question can contact me</p>
-                </div>
+                {#                <div class="card-body">#}
+                {#                    <p class="card-text">If you have any question can contact me</p>#}
+                {#                </div>#}
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">email: <u>{{ blog.user_email }}</u></li>
-                    <li class="list-group-item">qq: <u>1819975371</u></li>
-                    <!-- 在新的页面里跳转 -->
-                    <li class="list-group-item">blog: <a href="https://blog.csdn.net/weixin_44984664"
-                                                         target="_blank">https://blog.csdn.net/weixin_44984664</a></li>
+                    {#                    <li class="list-group-item">qq: <u>1819975371</u></li>#}
+                    {#                    <!-- 在新的页面里跳转 -->#}
+                    {#                    <li class="list-group-item">blog: <a href="https://blog.csdn.net/weixin_44984664"#}
+                    {#                                                         target="_blank">https://blog.csdn.net/weixin_44984664</a></li>#}
                 </ul>
-                <div class="card-body">
-                    <a href="https://github.com/Joshua-li-yi/food-blog" class="card-link" target="_blank">github</a>
-                    <!-- <a href="#" class="card-link">Another link</a> -->
-                </div>
+                {#                <div class="card-body">#}
+                {#                    <a href="https://github.com/Joshua-li-yi/food-blog" class="card-link" target="_blank">github</a>#}
+                {#                    <!-- <a href="#" class="card-link">Another link</a> -->#}
+                {#                </div>#}
                 <!-- <div class="card-footer text-muted">
                     2 days ago
                 </div> -->
             </div>
-            <div class="col-md-9" style="background-color: #303030">
+            <div class="col-md-8" style="background-color: #303030;">
                 <h2>{{ blog.blog_title }}</h2>
-                <hr>
+                <hr style="background-color: white">
+                {#                {{ blog.blog_content }}#}
                 {#                <div class="card-body">#}
                 {#                    <h4 class="card-title">Card title</h4>#}
                 {#                    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>#}
@@ -226,16 +227,33 @@
             integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
     </script>
     <script src="/static/js/bootstrap.js"></script>
-    <script src="https://cdn.bootcss.com/showdown/1.3.0/showdown.min.js"></script>
-    {% if blog %}
-        <script type="text/javascript">
-            var content = "{{ blog.content }}"; //使用el表达式获取后台返回的markdown内容
-            var converter = new showdown.Converter(); //初始化转换器
-            var htmlcontent = converter.makeHtml(content); //将MarkDown转为html格式的内容
-            $("#article .article-entry").html(htmlcontent);//添加到 div 中 显示出来
-        </script>
-    {% endif %}
+    <script type="text/javascript" src="/static/js/showdown.min.js"></script>
+
     </div>
 </body>
 
 </html>
+{% if blog %}
+    <script type="text/javascript">
+        {#进行字符转义#}
+
+        function html_decode(str) {
+            var s = "";
+            if (str.length == 0) return "";
+            s = str.replace(/&amp;/g, "&");
+            s = s.replace(/&lt;/g, "<");
+            s = s.replace(/&gt;/g, ">");
+            s = s.replace(/&nbsp;/g, " ");
+            s = s.replace(/&#39;/g, "\'");
+            s = s.replace(/&quot;/g, "\"");
+            s = s.replace(/<br\/>/g, "\n");
+            return s;
+        }
+
+        var content = html_decode("{{ blog.blog_content }}");
+        var converter = new showdown.Converter(); //初始化转换器
+        var htmlcontent = converter.makeHtml(content); //将MarkDown转为html格式的内容
+        $("#article .article-entry").html(htmlcontent);//添加到 div 中 显示出来
+        {#console.log(htmlcontent);#}
+    </script>
+{% endif %}
