@@ -179,13 +179,44 @@ def logIn(request):
         return render(request, 'logIn.html')
 
 
+# TODO (ly, 20200531): 还需添加数据库中的博文列表
 # 用户主页
 # 检查是否登陆
-@check_login
+# @check_login
 def home(request):
-    email = request.session.get("email")
-    print(email)
     # 删除会话 是否已经注册
+    # 连接数据库
+    db = pymysql.connect(host='localhost', port=3306, user='root', passwd='', db='food_blog', charset='utf8mb4')
+    # 创建游标
+    cursor = db.cursor()
+    # SQL 查询语句
+    sql = 'SELECT blog_id, blog_title, blog_excerpt FROM blog LIMIT 20;'
+    blogs = {}
+    try:
+        # 执行SQL语句
+        cursor.execute(sql)
+        # 获取所有记录列表
+        if cursor is not None:  # 注意这里。单纯判断cursor是否为None是不够的
+            db_blogs = cursor.fetchall()
+            for db_blog in db_blogs:
+                blogs[db_blog[0]] ={'title': db_blog[1], 'abstract': db_blog[2]}
+            # print(blogs)
+            return render(request, 'home.html', {'blogs': blogs})
+        else:
+            print('result is  None')
+            message = 'the blogs is null'
+            return render(request, 'home.html', {'message': message})
+        print('execute sql success')
+    except:
+        db.rollback()
+        print('rollback')
+        message = 'something error when fetch blogs'
+        print(message)
+        return render(request, 'home.html', {'message': message})
+    cursor.close()
+    # 关闭数据库连接
+    db.close()
+    print('close db')
     return render(request, 'home.html')
 
 
@@ -431,8 +462,9 @@ def save_draft(request):
         # 两个语句必须分成两次执行
         sql1 = 'INSERT INTO blog(blog_title, blog_content, blog_modified) ' + 'VALUES("{}", "{}", "{}"); '.format(title,
                                                                                                                   blog_content,
-                                                                                                           now_time)
-        sql2 = 'INSERT INTO publish_blog(ID, blog_id) ' + 'SELECT ID,LAST_INSERT_ID() FROM `user` WHERE user_email="{}";'.format(email)
+                                                                                                                  now_time)
+        sql2 = 'INSERT INTO publish_blog(ID, blog_id) ' + 'SELECT ID,LAST_INSERT_ID() FROM `user` WHERE user_email="{}";'.format(
+            email)
         # print(sql)
         try:
             # 执行sql语句
@@ -511,3 +543,58 @@ def blog_deploy(request):
 
     elif request.method == 'GET':
         return redirect('/user/witeBlog')
+
+
+# 查看博客
+def see_blog(request, bid):
+    # print(bid)
+    # 连接数据库
+    db = pymysql.connect(host='localhost', port=3306, user='root', passwd='', db='food_blog', charset='utf8mb4')
+    # 创建游标
+    cursor = db.cursor()
+    # SQL 查询语句
+    sql1 = 'CREATE VIEW browse_blog AS SELECT u.user_name, u.user_email, b.blog_title, b.blog_excerpt, b.blog_content, b.blog_modified FROM blog b, publish_blog p, `user` u WHERE b.blog_id = p.blog_id AND u.ID = p.ID AND  b.blog_id = {};'.format(bid)
+    sql2 = 'SELECT * FROM browse_blog;'
+    sql3 = 'DROP VIEW browse_blog;'
+    blog = {}
+    try:
+        # 执行SQL 1 语句
+        cursor.execute(sql1)
+        cursor.execute(sql2)
+        # 获取所有记录列表
+        if cursor is not None:  # 注意这里。单纯判断cursor是否为None是不够的
+            result = cursor.fetchone()
+            print('result', result)
+            # 判断是否有此用户
+            if result is not None:
+                blog['user_name'] = result[0]
+                blog['user_email'] = result[1]
+                blog['blog_id'] = bid
+                blog['blog_title'] = result[2]
+                blog['blog_abstract'] = result[3]
+                blog['blog_content'] = result[4]
+                blog['blog_modified'] = result[5]
+            else:
+                print('result is  None')
+                print('this user not exist')
+                message = 'this user not exist, please reload this page or log in again'
+                return render(request, 'blog.html', {'message': message})
+        else:
+            print('cursor is None')
+            print('this user not exist')
+            message = 'this user not exist, please reload this page or log in again'
+            return render(request, 'blog.html', {'message': message})
+        # 执行SQL 3 删除该视图语句
+        cursor.execute(sql3)
+        # db.commit()
+    except:
+        db.rollback()
+        print('rollback')
+        message = 'something error, please reload this page or log in again'
+        return render(request, 'me.html', {'message': message})
+
+    cursor.close()
+    # 关闭数据库连接
+    db.close()
+    print('close db')
+    return render(request, 'blog.html',{'blog': blog})
