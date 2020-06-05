@@ -98,11 +98,6 @@
     </div>
     <div class="tab-pane active" id="home">
         <div class="row">
-            <h4>
-                id: blog
-            </h4>
-        </div>
-        <div class="row">
             <div class="col-md-3">
                 <h3 class="card-header">About</h3>
                 <div class="card-body">
@@ -129,7 +124,8 @@
                     2 days ago
                 </div> -->
             </div>
-            <div class="card col-md-9">
+            <div class="card col-md-8" style="background-color: #303030;">
+
                 <div class="card-body">
                     <h4 class="card-title">Card title</h4>
                     <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
@@ -138,6 +134,7 @@
                     <a href="#" class="card-link">Card link</a>
                     <a href="#" class="card-link">Another link</a>
                 </div>
+
             </div>
         </div>
     </div>
@@ -153,7 +150,7 @@
                         <h6 class="card-subtitle mb-2 text-muted">abstract</h6>
                         <p class="card-text">{{ blog_content.abstract }}</p>
                         <a href="/user/blog-{{ blog_id }}" class="card-link" target="_blank">See</a>
-                        <a href="#" class="card-link">Another link</a>
+                        <a href="/user/blogModify-{{ blog_id }}" class="card-link">Modify</a>
                     </div>
                 </div>
             </div>

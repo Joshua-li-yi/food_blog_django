@@ -15,4 +15,5 @@ urlpatterns = [
     path(r'blogDeploy', views.blog_deploy),
     # 必须使用url才行
     url('blog-(\d+)', views.see_blog),
+    url('blogModify-(\d+)', views.blog_modify),
 ]

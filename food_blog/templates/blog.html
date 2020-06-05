@@ -167,11 +167,6 @@
     {#    需要在这里加上active才能在打卡网页时自动显示#}
     {% if blog %}
         <div class="tab-pane active" id="seeBlog">
-        {#        <div class="row">#}
-        {#            <h4>#}
-        {#                id: blog#}
-        {#            </h4>#}
-        {#        </div>#}
         <div class="row" style="margin-top: 10px">
             <div class="col-md-3" style="margin-left: 20px">
                 <h3 class="card-header">{{ blog.user_name }}</h3>
@@ -202,15 +197,6 @@
             <div class="col-md-8" style="background-color: #303030;">
                 <h2>{{ blog.blog_title }}</h2>
                 <hr style="background-color: white">
-                {#                {{ blog.blog_content }}#}
-                {#                <div class="card-body">#}
-                {#                    <h4 class="card-title">Card title</h4>#}
-                {#                    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>#}
-                {#                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of#}
-                {#                        the card's content.</p>#}
-                {#                    <a href="#" class="card-link">Card link</a>#}
-                {#                    <a href="#" class="card-link">Another link</a>#}
-                {#                </div>#}
                 <div id="article">
                     <div class="article-entry">
                     </div>

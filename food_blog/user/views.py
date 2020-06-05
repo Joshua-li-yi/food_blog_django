@@ -55,10 +55,10 @@ def register(request):
         # 字符串中删掉某个字符
         birthday = birthday.replace('-', '')
         # 获取当前时间 即为注册时间
-        now_time = datetime.datetime.now().strftime('%Y%m%d')
+        now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
         # print(now_time)
         # print(birthday)
-        print('VALUES(1, "{}", {}, "{}" , "{}", {}, {})'.format(name, now_time, email, pwd, birthday, gender))
+        print('VALUES("{}", {}, "{}" , "{}", {}, {})'.format(name, now_time, email, pwd, birthday, gender))
         # 异常检测
         if name == '':
             message = 'The name can not be none'
@@ -94,10 +94,12 @@ def register(request):
             # 设置session
             request.session['is_signup'] = '1'
             request.session['email'] = email
-            test_signup = request.session.get('is_signup')
-            test_email = request.session.get('email')
-            print('test_signup', test_signup)
-            print('test_email', test_email)
+
+            # test_signup = request.session.get('is_signup')
+            # test_email = request.session.get('email')
+            # print('test_signup', test_signup)
+            # print('test_email', test_email)
+
             # return redirect('/user/successRegisted')
             return render(request, 'successRegisted.html')
             # return render(request, 'home')
@@ -182,7 +184,7 @@ def logIn(request):
 # TODO (ly, 20200531): 还需添加数据库中的博文列表
 # 用户主页
 # 检查是否登陆
-# @check_login
+@check_login
 def home(request):
     # 删除会话 是否已经注册
     # 连接数据库
@@ -330,7 +332,11 @@ def me(request):
 # 写博客
 @check_login
 def writeBlog(request):
-    return render(request, 'writeblog.html')
+    blog = {}
+    blog['blog_title'] = 'Enter blog title'
+    blog['blog_abstract'] = 'Enter blog abstract'
+    blog['blog_content'] = ''
+    return render(request, 'writeblog.html' , {'blog':blog})
 
 
 # 成功注册之后进行登陆
@@ -443,6 +449,7 @@ def save_draft(request):
     if request.method == 'POST':
         title = request.POST.get('title')
         blog_content = request.POST.get('blog')
+        blog_abstract = request.POST.get('abstract')
         now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
 
         print('------------------------------')
@@ -462,6 +469,7 @@ def save_draft(request):
         sql1 = 'INSERT INTO blog(blog_title, blog_content, blog_modified) ' + 'VALUES("{}", "{}", "{}"); '.format(title,
                                                                                                                   blog_content,
                                                                                                                   now_time)
+
         sql2 = 'INSERT INTO publish_blog(ID, blog_id) ' + 'SELECT ID,LAST_INSERT_ID() FROM `user` WHERE user_email="{}";'.format(
             email)
         # print(sql)
@@ -498,11 +506,12 @@ def blog_deploy(request):
     if request.method == 'POST':
         title = request.POST.get('title')
         blog_content = request.POST.get('blog')
+        blog_abstract = request.POST.get('abstract')
         now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
-
         print('------------------------------')
         # print(title)
-        print(blog_content)
+        # print(blog_content)
+        print(blog_abstract)
         # 连接数据库
         db = pymysql.connect(host='localhost', port=3306, user='root', passwd='', db='food_blog', charset='utf8')
         print('connect db success')
@@ -514,19 +523,20 @@ def blog_deploy(request):
         # ID为自增ID所以不用进行赋值
         # {}作为占位符
         # 两个语句必须分成两次执行
-        sql1 = 'INSERT INTO blog(blog_title, blog_content, blog_modified) ' + 'VALUES("{}", "{}", "{}"); '.format(title,
+        sql1 = 'INSERT INTO blog(blog_title, blog_content, blog_modified, blog_excerpt) ' + 'VALUES("{}", "{}", "{}", "{}"); '.format(title,
                                                                                                                   blog_content,
-                                                                                                                  now_time)
+                                                                                                                  now_time, blog_abstract)
         sql2 = 'INSERT INTO publish_blog(ID, blog_id, publish_time) ' + 'SELECT ID,LAST_INSERT_ID(),"{}" FROM `user` WHERE user_email="{}";'.format(
             now_time, email)
         # print(sql)
         try:
             # 执行sql语句
             cursor.execute(sql1)
+            print('execute sql1 success')
             cursor.execute(sql2)
+            print('execute sql2 success')
             # 提交到数据库执行
             db.commit()
-            print('execute sql success')
             # 设置message
             message = 'blog deploy success'
         except:
@@ -605,3 +615,69 @@ def see_blog(request, bid):
     db.close()
     print('close db')
     return render(request, 'blog.html', {'blog': blog})
+
+
+# TODO(ly, 20200606): 还需添加存储过程的更新操作
+@check_login
+def blog_modify(request, bid):
+    # print(bid)
+    # 连接数据库
+    db = pymysql.connect(host='localhost', port=3306, user='root', passwd='', db='food_blog', charset='utf8mb4')
+    print('connect database success')
+
+    # 创建游标
+    cursor = db.cursor()
+    # SQL 查询语句
+    # sql1 = 'CREATE VIEW browse_blog AS SELECT u.user_name, u.user_email, b.blog_title, b.blog_excerpt, b.blog_content, b.blog_modified FROM blog b, publish_blog p, `user` u WHERE b.blog_id = p.blog_id AND u.ID = p.ID AND  b.blog_id = {};'.format(bid)
+    sql2 = 'SELECT blog_title, blog_excerpt, blog_content FROM blog WHERE blog_id={};'.format(bid)
+    # sql3 = 'DROP VIEW browse_blog;'
+    blog = {}
+    try:
+        # 执行SQL 1 语句
+        # cursor.execute(sql1)
+        # print('execute create view success ')
+        cursor.execute(sql2)
+        print('success select data from view')
+        # 获取所有记录列表
+        if cursor is not None:  # 注意这里。单纯判断cursor是否为None是不够的
+            result = cursor.fetchone()
+            # print('result', result)
+            # 判断是否有此用户
+            if result is not None:
+                # blog['user_name'] = result[0]
+                # blog['user_email'] = result[1]
+                blog['blog_id'] = bid
+                blog['blog_title'] = result[0]
+                blog['blog_abstract'] = result[1]
+                # print(result[4])
+                # a = repr(result[4])[1:-1]
+                # print(a)
+                # blog['blog_content'] = repr(result[2])[1:-1]
+                blog['blog_content'] = result[2]
+                # print(blog['blog_content'])
+                # blog['blog_modified'] = result[5]
+            else:
+                print('result is  None')
+                print('this user not exist')
+                message = 'this user not exist, please reload this page or log in again'
+                return render(request, 'writeblog.html', {'alert': message})
+        else:
+            print('cursor is None')
+            print('this user not exist')
+            message = 'this user not exist, please reload this page or log in again'
+            return render(request, 'writeblog.html', {'alert': message})
+        # 执行SQL 3 删除该视图语句
+        # cursor.execute(sql3)
+        # db.commit()
+    except:
+        db.rollback()
+        print('rollback')
+        message = 'something error, please reload this page or log in again'
+        return render(request, 'writeblog.html', {'alert': message})
+
+    cursor.close()
+    # 关闭数据库连接
+    db.close()
+    print('close db')
+    return render(request, 'writeblog.html', {'blog': blog})
+
