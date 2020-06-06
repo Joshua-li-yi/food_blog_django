@@ -151,6 +151,7 @@ def logIn(request):
                         # 设置session
                         request.session['is_login'] = '1'
                         request.session['email'] = email
+                        request.session['modify'] = 0
                         # 设置session7秒后失效
                         # request.session.set_expiry(7)
                         return render(request, 'home.html')
@@ -466,28 +467,42 @@ def save_draft(request):
         # ID为自增ID所以不用进行赋值
         # {}作为占位符
         # 两个语句必须分成两次执行
-        sql1 = 'INSERT INTO blog(blog_title, blog_content, blog_modified) ' + 'VALUES("{}", "{}", "{}"); '.format(title,
-                                                                                                                  blog_content,
-                                                                                                                  now_time)
+        # sql1 = 'INSERT INTO blog(blog_title, blog_content, blog_modified) ' + 'VALUES("{}", "{}", "{}"); '.format(title,
+        #                                                                                                           blog_content,
+        #                                                                                                           now_time)
 
-        sql2 = 'INSERT INTO publish_blog(ID, blog_id) ' + 'SELECT ID,LAST_INSERT_ID() FROM `user` WHERE user_email="{}";'.format(
-            email)
+        # sql2 = 'INSERT INTO publish_blog(ID, blog_id) ' + 'SELECT ID,LAST_INSERT_ID() FROM `user` WHERE user_email="{}";'.format(
+        #     email)
         # print(sql)
+
+        if request.session['modify'] == 0:
+            sql = 'CALL save_blog("{}","{}","{}","{}","{}", 1,7'.format(title, blog_abstract, blog_content, now_time, email)
+        else:
+            sql = 'CALL save_blog("{}","{}","{}","{}","{}", 2,{}'.format(title, blog_abstract, blog_content, now_time, email, request.session['bid'])
+            del request.session['bid']
+            request.session['modify'] = 0
         try:
             # 执行sql语句
-            cursor.execute(sql1)
-            cursor.execute(sql2)
+            cursor.execute(sql)
+            # cursor.execute(sql2)
+            if cursor is not None:  # 注意这里。单纯判断cursor是否为None是不够的
+                result = cursor.fetchone()
+                print('result', result)
+                # 判断是否有此用户
+                if result is not None:
+                    message = result[0]
             # 提交到数据库执行
             db.commit()
             print('execute sql success')
             # 设置message
-            message = 'blog draft save success'
+            # message = 'blog draft save success'
+            return render(request, 'writeblog_plus.html', {'message': message})
         except:
             # Rollback in case there is any error
             db.rollback()
             print('rollback')
             message = 'some thing error please resave'
-        return render(request, 'writeblog.html', {'message': message})
+            return render(request, 'writeblog_plus.html', {'message': message})
         cursor.close()
         # 关闭数据库连接
         db.close()
@@ -544,7 +559,7 @@ def blog_deploy(request):
             db.rollback()
             print('rollback')
             message = 'some thing error please redeploy'
-        return render(request, 'writeblog.html', {'message': message})
+        return render(request, 'writeblog_plus.html', {'message': message})
         cursor.close()
         # 关闭数据库连接
         db.close()
@@ -622,6 +637,8 @@ def see_blog(request, bid):
 def blog_modify(request, bid):
     # print(bid)
     # 连接数据库
+    request.session['modify'] = 1
+    request.session['bid'] = bid
     db = pymysql.connect(host='localhost', port=3306, user='root', passwd='', db='food_blog', charset='utf8mb4')
     print('connect database success')
 
@@ -631,6 +648,8 @@ def blog_modify(request, bid):
     # sql1 = 'CREATE VIEW browse_blog AS SELECT u.user_name, u.user_email, b.blog_title, b.blog_excerpt, b.blog_content, b.blog_modified FROM blog b, publish_blog p, `user` u WHERE b.blog_id = p.blog_id AND u.ID = p.ID AND  b.blog_id = {};'.format(bid)
     sql2 = 'SELECT blog_title, blog_excerpt, blog_content FROM blog WHERE blog_id={};'.format(bid)
     # sql3 = 'DROP VIEW browse_blog;'
+    # sql = 'CALL save_blog("{}","{}","{}","{}","{}", 1,7'.format(title, blog_abstract, blog_content, now_time, email)
+
     blog = {}
     try:
         # 执行SQL 1 语句
@@ -665,7 +684,7 @@ def blog_modify(request, bid):
             print('cursor is None')
             print('this user not exist')
             message = 'this user not exist, please reload this page or log in again'
-            return render(request, 'writeblog.html', {'alert': message})
+            return render(request, 'writeblog.html',{'alert': message})
         # 执行SQL 3 删除该视图语句
         # cursor.execute(sql3)
         # db.commit()
