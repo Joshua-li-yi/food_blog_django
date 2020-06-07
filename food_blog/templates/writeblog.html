@@ -72,7 +72,7 @@
         <div class="form-group row">
             <label class="col-md-1 col-form-label" style="margin-left: 30px;">Title</label>
             <div class="col-md-5">
-                <input name="title" type="text" class="form-control" id="blogtitle" placeholder="{{ blog.blog_title }}" style="width: 600px; margin-left: 15px">
+                <input name="title" type="text" class="form-control" id="blogtitle" placeholder="blog title" style="width: 600px; margin-left: 15px" value="{{ blog.blog_title }}">
             </div>
         </div>
 
@@ -90,7 +90,7 @@
             <label class="col-md-1 col-form-label" style="margin-left: 30px;">Abstract</label>
             <div class="col-md-9" style="margin-left: 30px; width: 400px">
 {#                <input name="abstract" type="text" class="form-control" id="blogAbstract" placeholder="Enter blog abstract" style="width: 600px">#}
-                <textarea class="form-control" name="abstract" form="withBlog" rows="3" placeholder="{{ blog.blog_abstract }}"></textarea>
+                <textarea class="form-control" name="abstract" form="withBlog" rows="3" placeholder="your blog abstract">{{ blog.blog_abstract }}</textarea>
                 <h6>Max characters: 200 </h6>
             </div>
         </div>

@@ -82,11 +82,12 @@ def register(request):
         sql = (
             'INSERT INTO `user`(user_name, user_registered, user_email, user_pass, user_birthday, gender) '
             # {}作为占位符
-            'VALUES("{}", {}, "{}" , "{}", {}, {})'.format(name, now_time, email, pwd, birthday, gender)
+            'VALUES("{}", "{}", "{}" , "{}", "{}", {});'.format(name, now_time, email, pwd, birthday, gender)
         )
 
         try:
             # 执行sql语句
+            print(sql)
             cursor.execute(sql)
             # 提交到数据库执行
             db.commit()
@@ -431,16 +432,6 @@ def alter_info(request):
         return redirect('/user/me')
 
 
-# TODO (ly, 20200529): 还需添加注销用户
-# 注销用户
-@check_login
-def delete_user(request):
-    # 删除会话记录
-    del request.session['is_login']
-    del request.session['email']
-    return redirect('/user/logIn')
-
-
 # TODO(ly, 20200530): 已经基本完成
 # 保存草稿
 @check_login
@@ -476,14 +467,23 @@ def save_draft(request):
         # print(sql)
 
         if request.session['modify'] == 0:
-            sql = 'CALL save_blog("{}","{}","{}","{}","{}", 1,7'.format(title, blog_abstract, blog_content, now_time, email)
+            sql = 'CALL save_blog("{}","{}","{}","{}","{}", 1, 7, @msg);'.format(title, blog_abstract, blog_content, now_time, email)
+
         else:
-            sql = 'CALL save_blog("{}","{}","{}","{}","{}", 2,{}'.format(title, blog_abstract, blog_content, now_time, email, request.session['bid'])
+            sql = 'CALL save_blog("{}","{}","{}","{}","{}", 2, {}, @msg);'.format(title, blog_abstract, blog_content, now_time, email, request.session['bid'])
             del request.session['bid']
             request.session['modify'] = 0
+
+        sql2 = 'SELECT @msg;'
         try:
             # 执行sql语句
+            # cursor.execute(sql1)
+            # print('execute sq1 success')
+
             cursor.execute(sql)
+            print('execute sq success')
+            cursor.execute(sql2)
+            print('execute sq2 success')
             # cursor.execute(sql2)
             if cursor is not None:  # 注意这里。单纯判断cursor是否为None是不够的
                 result = cursor.fetchone()
@@ -699,4 +699,42 @@ def blog_modify(request, bid):
     db.close()
     print('close db')
     return render(request, 'writeblog.html', {'blog': blog})
+
+
+@check_login
+def log_off(request):
+    # 连接数据库
+    email = request.session['email']
+    del request.session['is_login']
+    del request.session['email']
+    db = pymysql.connect(host='localhost', port=3306, user='root', passwd='', db='food_blog', charset='utf8')
+    print('connect db success')
+    # 创建游标
+    cursor = db.cursor()
+    # 删除发布的博客
+    sql1 = 'DELETE b,p FROM blog b, publish_blog p WHERE b.blog_id = p.blog_id AND p.ID = ( SELECT ID FROM `user` u WHERE u.user_email = "{}" );'.format(email)
+    # 删除用户信息
+    sql2 = 'DELETE u,up FROM `user` u LEFT JOIN user_info_plus up ON u.ID = up.ID WHERE u.user_email= "{}";'.format(email)
+    try:
+        # 执行sql语句
+        cursor.execute(sql1)
+        cursor.execute(sql2)
+        # 提交到数据库执行
+        db.commit()
+        print('execute sql success')
+        print('user log off success')
+        return render(request, 'logOff.html')
+        # return render(request, 'home')
+    except:
+        # Rollback in case there is any error
+        db.rollback()
+        print('rollback')
+        message = 'some thing error, data base rollback'
+        return render(request, 'home.html', {'message': message})
+    cursor.close()
+    # 关闭数据库连接
+    db.close()
+    print('close db')
+    # print(email, name, pwd)
+
 

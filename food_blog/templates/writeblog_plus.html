@@ -5,65 +5,25 @@
     <meta charset="UTF-8">
     <link rel="icon" href="/static/img/food_blog_icon%20.png" style="width: auto;">
     <title>write blog</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
-    <link href="/static/css/github-markdown.css" rel="stylesheet"/>
     <link rel="stylesheet" href="/static/css/bootstrap.css">
-    <style>
-        .mk-editor {
-            margin: 0;
-            padding: 6px;
-            border: 0;
-            height: 630px;
-            display: flex;
-            justify-content: space-between;
-            box-shadow: 0 0 5px #ccc;
-        }
-
-        .mk-editor > * {
-            display: block !important;
-            width: calc(50% - 5px) !important;
-            height: 600px !important;
-            word-wrap: break-word;
-            overflow-y: scroll;
-            padding: 10px;
-        }
-
-        #editor-edit {
-            font-size: 15px;
-            font-weight: 300;
-            outline: none;
-        }
-    </style>
 </head>
 
 <body>
 {% if message %}
-    <div class="modal" id="myModel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">PROMPT</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>{{ message }}</p>
-                </div>
-                <div class="modal-footer">
-                    <a href="/user/home">
-                        <button type="button" class="btn btn-primary">OK</button>
-                    </a>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
+    <div class="tab-pane jumbotron text-center active" id="startGuid" style="width: 400px;margin-left: 400px">
+{#        <h1 class="display-3">Hello, Food Hunter!</h1>#}
+        <img src="/static/img/eat.gif" style="width: 250px">
+        <p class="lead">Result</p>
+        <hr class="my-4">
+        <h3>{{ message }}</h3>
+        <p class="lead">
+
+            <br>
+            <a class="btn btn-primary btn-lg" href="/user/home" role="button">Home</a>
+            <a class="btn btn-primary btn-lg" href="/user/writeBlog" role="button" style="margin-left: 15px">write new</a>
+        </p>
     </div>
 {% endif %}
-
-{#{% if alert %}#}
-{#    <div class="alert alert-warning">{{ alert }}</div>#}
-{#{% endif %}#}
 
 
 <!-- Optional JavaScript -->
