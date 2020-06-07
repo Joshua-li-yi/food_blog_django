@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/static/css/bootstrap.css">
     <link rel="stylesheet" href="/static/css/me.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
-
+    <link rel="stylesheet" href="/static/css/bootstrap-datetimepicker.min.css">
     <title>Me</title>
 </head>
 
@@ -19,6 +19,8 @@
     {% if message %}
         <div class="alert alert-warning">{{ message }}</div>
     {% endif %}
+
+
     {#    导航栏#}
     <div class="row">
         <ul class="nav nav-tabs">
@@ -44,7 +46,6 @@
             </li>
         </ul>
     </div>
-
     {#    简历开始页#}
     <form method="post" action="/user/alterInfo">
         {% if info %}
@@ -93,6 +94,8 @@
                                                                                           type="text" name="birthday"
                                                                                           value="{{ info.birthday }}"
                                                                                           style="background-color: #303030; border:#303030; color: #adb5bd ">
+
+
                                     </li>
                                     <li><i class="fa fa-key" style="color: #00bc8c"></i>&nbsp;&nbsp; <input id='userPwd'
                                                                                                             readonly="readonly"
@@ -133,7 +136,7 @@
                                     </tr>
                                     <tr>
                                         <td class="td1"><i class="fa fa-qq" style="color: #00bc8c"></i></td>
-                                        <td><input id='userQQ' readonly="readonly" type="text" name="QQ"
+                                        <td><input id='userQQ' readonly="readonly" type="text" name="qq"
                                                    value="{{ info.qq }}"
                                                    style="background-color: #303030; border:#303030; color: #adb5bd ">
                                         </td>
@@ -166,14 +169,16 @@
                                 </h3>
                                 <p><input id='userInfo' readonly="readonly" type="text" name="info"
                                           value="{{ info.brief_info }}"
-                                          style="background-color: #303030; border:#303030; color: #adb5bd; height: 250px;width: 500px; border-radius: 30px;"></p>
+                                          style="background-color: #303030; border:#303030; color: #adb5bd; height: 250px;width: 500px; border-radius: 30px;">
+                                </p>
                             </div>
                             <div class="col-md-5 offset-md-2">
 
                                 <h3 class="col-header-title text-success"><i class="fa fa-heart fa-spin "></i>OTHER</h3>
                                 <p><input id='userOther' readonly="readonly" type="text" name="other"
                                           value="{{ info.other }}"
-                                          style="background-color: #303030; border:#303030; color: #adb5bd; height: 250px;width: 350px; border-radius: 30px; "></p>
+                                          style="background-color: #303030; border:#303030; color: #adb5bd; height: 250px;width: 350px; border-radius: 30px; ">
+                                </p>
                             </div>
                             <button class="btn btn-success btn-md btn-lg" type="submit" id='submit'>Submit</button>
                         </div>
@@ -192,8 +197,25 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
 </script>
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 <script src="/static/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap-datetimepicker.min.js"></script>
+{#     /*（重要，这就是日期控件所需的js）*/#}
+<script type="text/javascript" src="/static/js/bootstrap-datetimepicker.fr.js"></script>
+{#     /*（重要，弹出日历里面 显示的文字 bootstrap里面显示的是英文 ，触发后显示的年月日等的显示文字，即为：Jan，feb等等）*/#}
 
+<script type="text/javascript">
+    $('#userBirthday').datetimepicker({
+        forceParse: 0,//设置为0，时间不会跳转1899，会显示当前时间。
+        language: 'en',//显示中文
+        format: 'yyyy-mm-dd',//显示格式
+        minView: "month",//设置只显示到月份
+        initialDate: new Date(),//初始化当前日期
+        autoclose: true,//选中自动关闭
+        todayBtn: true//显示今日按钮
+    })
+    $("#date").datetimepicker("setDate", new Date());  //设置显示默认当天的时间
+</script>
 
 </body>
 

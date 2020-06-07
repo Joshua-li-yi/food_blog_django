@@ -96,49 +96,36 @@
             </div>
         </div>
     </div>
-    <div class="tab-pane active" id="home">
-        <div class="row">
-            <div class="col-md-3">
-                <h3 class="card-header">About</h3>
-                <div class="card-body">
-                    <h5 class="card-title">developer: Joshua</h5>
-                    <h6 class="card-subtitle text-muted">a sophomore at Nankai University</h6>
-                </div>
-                <img style="height: 400px; width: 100%; display: block;" src="/static/img/liyi photo.jpg"
-                     alt="Card image">
-                <div class="card-body">
-                    <p class="card-text">If you have any question can contact me</p>
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">email: <u>liyinankai1@163.com</u></li>
-                    <li class="list-group-item">qq: <u>1819975371</u></li>
-                    <!-- 在新的页面里跳转 -->
-                    <li class="list-group-item">blog: <a href="https://blog.csdn.net/weixin_44984664"
-                                                         target="_blank">https://blog.csdn.net/weixin_44984664</a></li>
-                </ul>
-                <div class="card-body">
-                    <a href="https://github.com/Joshua-li-yi/food-blog" class="card-link" target="_blank">github</a>
-                    <!-- <a href="#" class="card-link">Another link</a> -->
-                </div>
-                <!-- <div class="card-footer text-muted">
-                    2 days ago
-                </div> -->
-            </div>
-            <div class="card col-md-8" style="background-color: #303030;">
 
-                <div class="card-body">
-                    <h4 class="card-title">Card title</h4>
-                    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                        the card's content.</p>
-                    <a href="#" class="card-link">Card link</a>
-                    <a href="#" class="card-link">Another link</a>
-                </div>
+    <div class="tab-pane active" id="home">
+        <div class="row" style="margin-top: 20px;">
+        {% if user %}
+            <div class="col-md-3">
+                <h3 class="card-header">{{ user.name }}</h3>
+            <ul class="list-group list-group-flush">
+                    <li class="list-group-item">email: <u>{{ user.email }}</u></li>
+                </ul>
+            </div>
+        {% endif %}
+            <div class="col-md-8" style="background-color: #303030;">
+                {% for blog_id, blog_content in myBlogs.items %}
+                    <div class="row" style="margin-top: 25px;">
+                        <div class="card col-md-9" style="margin-left: 95px;background-color: #1d2124 ">
+                            <div class="card-body">
+                                <h4 class="card-title">{{ blog_content.title }}</h4>
+                                <h6 class="card-subtitle mb-2 text-muted">abstract</h6>
+                                <p class="card-text">{{ blog_content.abstract }}</p>
+                                <a href="/user/blog-{{ blog_id }}" class="card-link" target="_blank">See</a>
+                                <a href="/user/blogModify-{{ blog_id }}" class="card-link">Modify</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
 
             </div>
         </div>
     </div>
-{#    # 模板语言循环字典value值与key值 后跟“.items”不加()，已元组输出。#}
+    {#    # 模板语言循环字典value值与key值 后跟“.items”不加()，已元组输出。#}
 
 
     <div class="tab-pane" id="foodtime" style="margin-left: 340px;">

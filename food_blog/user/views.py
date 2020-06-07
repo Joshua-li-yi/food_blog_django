@@ -190,12 +190,16 @@ def logIn(request):
 def home(request):
     # 删除会话 是否已经注册
     # 连接数据库
+    email = request.session['email']
     db = pymysql.connect(host='localhost', port=3306, user='root', passwd='', db='food_blog', charset='utf8mb4')
     # 创建游标
     cursor = db.cursor()
     # SQL 查询语句
     sql = 'SELECT blog_id, blog_title, blog_excerpt FROM blog LIMIT 20;'
+    sql2 = 'SELECT b.blog_id, b.blog_title, b.blog_excerpt FROM blog b, publish_blog p WHERE b.blog_id=p.blog_id AND p.ID=(SELECT u.ID FROM `user` u WHERE u.user_email="{}");'.format(email)
+    sql3 = 'SELECT user_name FROM `user` WHERE user_email="{}";'.format(email)
     blogs = {}
+    my_blogs = {}
     try:
         # 执行SQL语句
         cursor.execute(sql)
@@ -205,18 +209,46 @@ def home(request):
             for db_blog in db_blogs:
                 blogs[db_blog[0]] ={'title': db_blog[1], 'abstract': db_blog[2]}
             # print(blogs)
-            return render(request, 'home.html', {'blogs': blogs})
         else:
             print('result is  None')
             message = 'the blogs is null'
             return render(request, 'home.html', {'message': message})
         print('execute sql success')
+
+        # 执行SQL语句
+        cursor.execute(sql2)
+        # 获取所有记录列表
+        if cursor is not None:  # 注意这里。单纯判断cursor是否为None是不够的
+            db_blogs = cursor.fetchall()
+            for db_blog in db_blogs:
+                my_blogs[db_blog[0]] ={'title': db_blog[1], 'abstract': db_blog[2]}
+            # print(blogs)
+        else:
+            print('result is  None')
+            message = 'the blogs is null'
+            return render(request, 'home.html', {'message': message})
+        print('execute sql2 success')
+
+        cursor.execute(sql3)
+        print('execute sq2 success')
+        # cursor.execute(sql2)
+        if cursor is not None:  # 注意这里。单纯判断cursor是否为None是不够的
+            result = cursor.fetchone()
+            print('result', result)
+            # 判断是否有此用户
+            if result is not None:
+                name = result[0]
     except:
         db.rollback()
         print('rollback')
         message = 'something error when fetch blogs'
         print(message)
         return render(request, 'home.html', {'message': message})
+    user = {
+        'name': name,
+        'email': email,
+    }
+    return render(request, 'home.html', {'blogs': blogs, 'myBlogs': my_blogs, 'user': user})
     cursor.close()
     # 关闭数据库连接
     db.close()
@@ -249,7 +281,8 @@ def me(request):
                 db_pass = result[2]
                 db_birthday = result[3]
                 db_gender = result[4]
-
+                # print('---------------')
+                # print(db_birthday)
             else:
                 print('result is  None')
                 print('this user not exist')
@@ -281,11 +314,11 @@ def me(request):
                 db_qq = result[6]
                 db_wechat = result[7]
             else:  # 如果没有就使用默认的信息
-                db_brief_info = "your brief information"
+                db_brief_info = "your brief information 200 words"
                 db_phone = "123456"
                 db_blog_url = "https://www.baidu.com/"
                 db_identity = "student"
-                db_other = "other information about you"
+                db_other = "other information about you 255 words"
                 db_city = "beijing"
                 db_qq = '123456789'
                 db_wechat = '123456789'
@@ -383,47 +416,53 @@ def alter_info(request):
         other = request.POST.get('other')
 
         print('------------------------')
-        print(name)
-        return redirect('/user/me')
-        print('begin login ')
+        int_gender = 0
+        if gender.lower() == 'male':
+            int_gender = 1
+        elif gender.lower() == 'female':
+            int_gender = 0
+        else:
+            int_gender = 3
+
+        # if birthday[:3] == 'Sep':
+        #     birthday.replace('t', '')
+        # time_struct = datetime.datetime.strptime(birthday, '%b. %d, %Y')
+        # birthday = datetime.datetime.strftime("%Y%M%D", time_struct)
         # 连接数据库
         db = pymysql.connect(host='localhost', port=3306, user='root', passwd='', db='food_blog', charset='utf8mb4')
         # 创建游标
         cursor = db.cursor()
         # SQL 查询语句
-
-        sql = 'UPDATE `user` SET name="{}", gender = {}, user_pass = "{}", user_birthday = "{}" WHERE user_email = "{}";'.format(
-            name, gender, pwd, birthday, email)
+        sql = 'CALL modify_user_info("{}","{}", "{}", "{}", "{}", "{}", "{}","{}", {}, "{}","{}", "{}","{}", @msg);'.format(biref_info, other, phone, qq, wechat, blog_url, city, identity, int_gender, name, pwd, birthday, email)
+        sql2 = 'SELECT @msg;'
         try:
-            # 执行SQL语句
+            # 执行sql语句
+            # cursor.execute(sql)
+            # print('execute sq1 success')
+            print(sql)
             cursor.execute(sql)
+            print('execute sq success')
+            cursor.execute(sql2)
+            print('execute sq2 success')
+            # cursor.execute(sql2)
+            if cursor is not None:  # 注意这里。单纯判断cursor是否为None是不够的
+                result = cursor.fetchone()
+                print('result', result)
+                # 判断是否有此用户
+                if result is not None:
+                    message = result[0]
             # 提交到数据库执行
             db.commit()
             print('execute sql success')
-
-            info = {
-                'ID': db_ID,
-                'name': name,
-                'pwd': pwd,
-                'birthday': birthday,
-                'gender': gender,
-                'brief_info': brief_info,
-                'phone': phone,
-                'blog_url': blog_url,
-                'identity': identity,
-                'other': other,
-                'email': email,
-                'city': city,
-                'qq': qq,
-                'wechat': wechat,
-            }
-            return render(request, 'me.html', {'info': info})
+            # 设置message
+            # message = 'blog draft save success'
+            return render(request, 'modify_info_success.html', {'message': message})
         except:
             db.rollback()
             print('rollback')
-            message = 'something error when log in'
+            message = 'something error when alter information'
             print(message)
-            return render(request, 'logIn.html', {'message': message})
+            return render(request, 'modify_info_success.html', {'message': message})
         cursor.close()
         # 关闭数据库连接
         db.close()
