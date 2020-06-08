@@ -9,6 +9,12 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/static/css/bootstrap.css">
     <title>food life</title>
+    {#    限制blog里的图片的宽度#}
+    <style type="text/css">
+        #article img {
+            max-width: 700px;
+        }
+    </style>
 </head>
 
 <body>
@@ -22,17 +28,12 @@
 
     <div class="collapse navbar-collapse" id="navbarColor02">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#home" data-toggle="tab">home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#foodtime" data-toggle="tab">Food Time</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#refuseSearchPage" data-toggle="tab">Refuse classification</a>
-            </li>
+
             <li class="nav-item">
                 <a class="nav-link" href="#about" data-toggle="tab">About</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link " href="#seeBlog" data-toggle="tab">Wow</a>
             </li>
         </ul>
         <div class="form-inline my-2 my-lg-0">
@@ -45,7 +46,6 @@
                     <a href="/user/me" class="btn btn-primary" role="button">Me</a>
                 </li>
             </ul>
-
         </div>
     </div>
 
@@ -54,19 +54,6 @@
     <div class="alert alert-warning">{{ message }}</div>
 {% endif %}
 <div class="tab-content">
-
-    <div class="tab-pane" id="refuseSearchPage" style="margin-top: 120px;margin-left:60px">
-        <h1 class="" id="refuseSearchTitle" style="margin-left: 330px">Refuse Search</h1>
-        <div class="container enter-blockc col-md-7" id="refuseSearch" style="height: 50px;">
-            <form class="form-inline" action="/user/garbageSearch" method="post">
-                <input class="form-control mr-sm-3" type="text" placeholder="Search"
-                       style="width: 450px;height: 45px;" name="garbage">
-                <button class="btn btn-secondary my-4 my-sm-0" type="submit"
-                        style="height: 45px;width: 80px;">Search
-                </button>
-            </form>
-        </div>
-    </div>
 
     <div class="tab-pane" id="about" style="margin-left: 350px;">
         <div class="row">
@@ -99,57 +86,31 @@
         </div>
     </div>
 
-    <div class="tab-pane active" id="home">
-        <div class="row" style="margin-top: 20px;">
-            {% if user %}
-                <div class="col-md-3">
-                    <h3 class="card-header">{{ user.name }}</h3>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">email: <u>{{ user.email }}</u></li>
-                    </ul>
-                </div>
-            {% endif %}
-            <div class="col-md-8" style="background-color: #303030;">
-                {% for blog_id, blog_content in myBlogs.items %}
-                    <div class="row" style="margin-top: 25px;">
-                        <div class="card col-md-9" style="margin-left: 95px;background-color: #1d2124 ">
-                            <div class="card-body">
-                                <h4 class="card-title">{{ blog_content.title }}</h4>
-                                <h6 class="card-subtitle mb-2 text-muted">abstract</h6>
-                                <p class="card-text">{{ blog_content.abstract }}</p>
-                                <p class="card-text" style="color: #007bff">{{ blog_content.publish_time }}</p>
-                                <a href="/user/blog-{{ blog_id }}" class="card-link" target="_blank">See</a>
-                                <a href="/user/blogModify-{{ blog_id }}" class="card-link">Modify</a>
-                                <a href="/user/blogDelete-{{ blog_id }}" class="card-link">Delete</a>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-
-            </div>
-        </div>
-    </div>
-    {#    # 模板语言循环字典value值与key值 后跟“.items”不加()，已元组输出。#}
-
-
-    <div class="tab-pane" id="foodtime" style="margin-left: 340px;">
-        {% for blog_id, blog_content in blogs.items %}
+    <div class="tab-pane active" id="garbage" style="margin-left: 350px">
+        {% for garbage_name, garbage_content in garbages.items %}
             <div class="row" style="margin-top: 25px;">
                 <div class="card col-7">
                     <div class="card-body">
-                        <h4 class="card-title">{{ blog_content.title }}</h4>
-                        <h6 class="card-subtitle mb-2 text-muted">abstract</h6>
-                        <p class="card-text">{{ blog_content.abstract }}</p>
-                        <p class="card-text" style="color: #007bff">{{ blog_content.publish_time }}</p>
-                        <a href="/user/blog-{{ blog_id }}" class="card-link" target="_blank">See</a>
-                        <a href="/user/blogModify-{{ blog_id }}" class="card-link">Modify</a>
+                        <h4 class="card-title">{{ garbage_name }}</h4>
+                        {#                        <h6 class="card-subtitle mb-2 text-muted">abstract</h6>#}
+                        <p class="card-text">{{ garbage_content.category_name }}</p>
+                        <h6>garbage description:</h6>
+                        <p class="card-text">{{ garbage_content.garbage_description }}</p>
+                        <img src="{{ garbage_content.img }}" style="width: 300px">
+                        <br>
+                        <br>
+                        <h6>category description:</h6>
+
+                        <p class="card-text">{{ garbage_content.category_description }}</p>
+                        {#                        <p class="card-text">{{ garbage_content }}</p>#}
+                        {#                        <p class="card-text" style="color: #007bff">{{ blog_content.publish_time }}</p>#}
+                        {#                        <a href="/user/blog-{{ blog_id }}" class="card-link" target="_blank">See</a>#}
+                        {#                        <a href="/user/blogModify-{{ blog_id }}" class="card-link">Modify</a>#}
                     </div>
                 </div>
             </div>
         {% endfor %}
     </div>
-
-
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.slim.min.js"
@@ -159,7 +120,33 @@
             integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
     </script>
     <script src="/static/js/bootstrap.js"></script>
+    <script type="text/javascript" src="/static/js/showdown.min.js"></script>
+
 </div>
 </body>
 
 </html>
+{% if blog %}
+    <script type="text/javascript">
+        {#进行字符转义#}
+
+        function html_decode(str) {
+            var s = "";
+            if (str.length == 0) return "";
+            s = str.replace(/&amp;/g, "&");
+            s = s.replace(/&lt;/g, "<");
+            s = s.replace(/&gt;/g, ">");
+            s = s.replace(/&nbsp;/g, " ");
+            s = s.replace(/&#39;/g, "\'");
+            s = s.replace(/&quot;/g, "\"");
+            s = s.replace(/<br\/>/g, "\n");
+            return s;
+        }
+
+        var content = html_decode("{{ blog.blog_content }}");
+        var converter = new showdown.Converter(); //初始化转换器
+        var htmlcontent = converter.makeHtml(content); //将MarkDown转为html格式的内容
+        $("#article .article-entry").html(htmlcontent);//添加到 div 中 显示出来
+        {#console.log(htmlcontent);#}
+    </script>
+{% endif %}

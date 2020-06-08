@@ -24,7 +24,8 @@ urlpatterns = [
     path(r'saveDraft', views.save_draft),
     # 发布blog
     path(r'blogDeploy', views.blog_deploy),
-
+    # 搜索垃圾
+    path(r'garbageSearch', views.garbage_search),
     # 必须使用url才行
     # 看blog
     url('blog-(\d+)', views.see_blog),

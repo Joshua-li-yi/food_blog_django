@@ -6,6 +6,7 @@ import datetime
 # 导入用于装饰器修复技术的包
 from functools import wraps
 import socket
+
 # Create your views here.
 
 """
@@ -34,6 +35,7 @@ def check_login(func):
         else:
             # ** 即使登录成功也只能跳转到home页面，现在通过在URL中加上next指定跳转的页面
             return render(request, 'notLogIn.html')
+
     return inner
 
 
@@ -61,7 +63,7 @@ def register(request):
         print('VALUES("{}", {}, "{}" , "{}", {}, {})'.format(name, now_time, email, pwd, birthday, gender))
 
         # 异常检测
-        if name == '' or len(name) >20:
+        if name == '' or len(name) > 20:
             message = 'The name length can not meet require'
             return render(request, 'signup.html', {'message': message})
         # 密码长度6<= <= 20
@@ -95,7 +97,8 @@ def register(request):
             'VALUES("{}", "{}", "{}" , "{}", "{}", {});'.format(name, now_time, email, pwd, birthday, gender)
         )
         # 将登陆信息插入到login表中
-        sql2 = 'INSERT INTO login(ID, login_time, ip, errorcount) VALUES( (SELECT ID FROM `user` WHERE user_email = "{}"), "{}", "{}", 0); '.format(email, now_time, ip)
+        sql2 = 'INSERT INTO login(ID, login_time, ip, errorcount) VALUES( (SELECT ID FROM `user` WHERE user_email = "{}"), "{}", "{}", 0); '.format(
+            email, now_time, ip)
 
         try:
             # 执行sql语句
@@ -151,7 +154,8 @@ def logIn(request):
         # SQL 查询语句
         sql = 'SELECT user_pass FROM user WHERE user_email = "{}"'.format(email)
         # 将登陆信息插入到login表中
-        sql2 = 'INSERT INTO login(ID, login_time, ip, errorcount) VALUES( (SELECT ID FROM `user` WHERE user_email = "{}"), "{}", "{}", {}); '.format(email, now_time, ip, request.session['error_count'])
+        sql2 = 'INSERT INTO login(ID, login_time, ip, errorcount) VALUES( (SELECT ID FROM `user` WHERE user_email = "{}"), "{}", "{}", {}); '.format(
+            email, now_time, ip, request.session['error_count'])
         # 密码错误3次开始提示
         if request.session['error_count'] < 3:
             try:
@@ -264,7 +268,8 @@ def home(request):
                 # 如果发布时间为空就说明该文章使草稿
                 if db_my_blog[3] is None:
                     publish_time = "draft"
-                my_blogs[db_my_blog[0]] = {'title': db_my_blog[1], 'abstract': db_my_blog[2], 'publish_time': publish_time}
+                my_blogs[db_my_blog[0]] = {'title': db_my_blog[1], 'abstract': db_my_blog[2],
+                                           'publish_time': publish_time}
 
             # print(blogs)
         else:
@@ -540,7 +545,7 @@ def save_draft(request):
         try:
             # 执行sql语句
             cursor.execute(sql)
-            print('execute sq success')
+            print('execute sql success')
             cursor.execute(sql2)
             print('execute sq2 success')
             if cursor is not None:  # 注意这里。单纯判断cursor是否为None是不够的
@@ -604,8 +609,9 @@ def blog_deploy(request):
                 now_time, email)
         else:  # 如果是先修改后发布的
             sql1 = 'UPDATE blog SET blog_title = "{}", blog_excerpt="{}", blog_content="{}", blog_modified="{}" WHERE blog_id = {};'.format(
-                title, blog_abstract, blog_content, now_time,  request.session['bid'])
-            sql2 = 'UPDATE publish_blog SET publish_time="{}" WHERE blog_id={};'.format(now_time, request.session['bid'])
+                title, blog_abstract, blog_content, now_time, request.session['bid'])
+            sql2 = 'UPDATE publish_blog SET publish_time="{}" WHERE blog_id={};'.format(now_time,
+                                                                                        request.session['bid'])
             del request.session['bid']
             request.session['modify'] = 0
 
@@ -742,13 +748,11 @@ def blog_modify(request, bid):
                                 blog['blog_content'] = result[2]
                             else:
                                 print('result is  None')
-                                print('this user not exist')
-                                message = 'this user not exist, please reload this page or log in again'
+                                message = 'this blog not exist'
                                 return render(request, 'writeblog.html', {'alert': message})
                         else:
                             print('cursor is None')
-                            print('this user not exist')
-                            message = 'this user not exist, please reload this page or log in again'
+                            message = 'this blog not exist'
                             return render(request, 'writeblog.html', {'alert': message})
                     except:
                         db.rollback()
@@ -762,8 +766,7 @@ def blog_modify(request, bid):
                     return render(request, 'writeblog_plus.html', {'message': message})
             else:
                 print('result is  None')
-                print('this user not exist')
-                message = 'this user not exist, please reload this page or log in again'
+                message = 'this blog not exist'
                 return render(request, 'writeblog.html', {'alert': message})
         else:
             print('cursor is None')
@@ -796,13 +799,21 @@ def log_off(request):
     # 删除发布的博客
     sql1 = 'DELETE b,p FROM blog b, publish_blog p WHERE b.blog_id = p.blog_id AND p.ID = ( SELECT ID FROM `user` u WHERE u.user_email = "{}" );'.format(
         email)
+    # 删除用户检索garbage的信息
+    sql2 = 'DELETE s FROM `user` u, search s WHERE u.ID = s.ID AND u.user_email= "{}";'.format(email)
+    # 删除用户附加信息
+    sql3 = 'DELETE FROM user_info_plus WHERE ID = (SELECT ID FROM `user` WHERE user_email="{}");'.format(email)
+    # 删除用户登陆信息
+    sql4 = 'DELETE FROM login WHERE ID = (SELECT ID FROM `user` WHERE user_email="{}");'.format(email)
     # 删除用户信息
-    sql2 = 'DELETE u,up FROM `user` u LEFT JOIN user_info_plus up ON u.ID = up.ID WHERE u.user_email= "{}";'.format(
-        email)
+    sql5 = 'DELETE FROM `user` WHERE user_email = "{}";'.format(email)
     try:
         # 执行sql语句
         cursor.execute(sql1)
         cursor.execute(sql2)
+        cursor.execute(sql3)
+        cursor.execute(sql4)
+        cursor.execute(sql5)
         # 提交到数据库执行
         db.commit()
         print('execute sql success')
@@ -842,8 +853,8 @@ def delete_blog(request, bid):
         # 提交到数据库执行
         db.commit()
         print('execute sql success')
-        print('blog '+bid +' delete success')
-        message = 'blog '+bid +' delete success'
+        print('blog ' + bid + ' delete success')
+        message = 'blog ' + bid + ' delete success'
         return render(request, 'blog_delete.html', {'message': message})
     except:
         # Rollback in case there is any error
@@ -855,3 +866,59 @@ def delete_blog(request, bid):
     # 关闭数据库连接
     db.close()
     print('close db')
+
+
+@check_login
+def garbage_search(request):
+    if request.method == 'POST':
+        email = request.session['email']
+        garbage = request.POST.get('garbage')
+        now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
+
+        # 连接数据库
+        db = pymysql.connect(host='localhost', port=3306, user='root', passwd='', db='food_blog', charset='utf8mb4')
+        print('connect database success')
+
+        # 创建游标
+        cursor = db.cursor()
+        # 创建视图
+        sql1 = 'SELECT g.garbage_name, c.garbage_catgory_name, g.garbage_description, g.garbage_img, c.garbage_category_description FROM garbage g, garbage_catgory c WHERE g.garbage_catgory_id = c.garbage_catgory_id AND g.garbage_name LIKE "%{}%";'.format(garbage)
+        # 查询视图
+        sql2 = 'INSERT INTO search(ID, garbage_name, search_time) VALUES( (SELECT ID FROM `user` WHERE user_email = "{}"), "{}", "{}"); '.format(
+            email, garbage, now_time)
+        # 删除该视图
+        garbages = {}
+        try:
+            # print(sql2)
+            # print(sql1)
+            cursor.execute(sql2)
+            # 执行SQL 1 语句
+            cursor.execute(sql1)
+            print('select garbages success')
+
+            if cursor is not None:  # 注意这里。单纯判断cursor是否为None是不够的
+                db_garbages = cursor.fetchall()
+                for db_garbage in db_garbages:
+                    garbages[db_garbage[0]] = {'category_name': db_garbage[1], 'garbage_description': db_garbage[2], 'img': db_garbage[3], 'category_description': db_garbage[4]}
+                # 必须得commit数据库才能看到
+                db.commit()
+                return render(request, 'garbage.html', {'garbages': garbages})
+            else:
+                print('result is  None')
+                message = 'the garbage is null'
+                db.commit()
+                return render(request, 'garbage.html', {'message': message})
+            print('execute sql success')
+
+        except:
+            db.rollback()
+            print('rollback')
+            message = 'something error, please research again'
+            return render(request, 'home.html', {'message': message})
+
+        cursor.close()
+        # 关闭数据库连接
+        db.close()
+        print('close db')
+    elif request.method == 'GET':
+        return redirect('/user/home')
