@@ -37,71 +37,53 @@
 </head>
 
 <body>
-{#{% if message %}#}
-{#    <div class="modal" id="myModel">#}
-{#        <div class="modal-dialog" role="document">#}
-{#            <div class="modal-content">#}
-{#                <div class="modal-header">#}
-{#                    <h5 class="modal-title">PROMPT</h5>#}
-{#                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
-{#                        <span aria-hidden="true">&times;</span>#}
-{#                    </button>#}
-{#                </div>#}
-{#                <div class="modal-body">#}
-{#                    <p>{{ message }}</p>#}
-{#                </div>#}
-{#                <div class="modal-footer">#}
-{#                    <a href="/user/home">#}
-{#                        <button type="button" class="btn btn-primary">OK</button>#}
-{#                    </a>#}
-{#                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-{#{% endif %}#}
-
 {% if alert %}
     <div class="alert alert-warning">{{ alert }}</div>
 {% endif %}
 
 {% if blog %}
-<form class="col-md-12" name="blogForm" id="withBlog">
-    <div class="row">
+    <form class="col-md-12" name="blogForm" id="withBlog">
+        <div class="row">
 
-        <div class="form-group row">
-            <label class="col-md-1 col-form-label" style="margin-left: 30px;">Title</label>
-            <div class="col-md-5">
-                <input name="title" type="text" class="form-control" id="blogtitle" placeholder="blog title" style="width: 600px; margin-left: 15px" value="{{ blog.blog_title }}">
+            <div class="form-group row">
+                <label class="col-md-1 col-form-label" style="margin-left: 30px;">Title</label>
+                <div class="col-md-5">
+                    <input name="title" type="text" class="form-control" id="blogtitle" placeholder="blog title"
+                           style="width: 600px; margin-left: 15px" value="{{ blog.blog_title }}">
+                </div>
             </div>
-        </div>
 
             <div class="btn-group" role="group" aria-label="Basic example" style="margin-left: 250px">
                 {#                发布文章#}
-                <a><button type="submit" class="btn btn-secondary" onclick="deploy()">deploy</button></a>
+                <a>
+                    <button type="submit" class="btn btn-secondary" onclick="deploy()">deploy</button>
+                </a>
                 {#                保存草稿#}
-                <a><button type="submit" class="btn btn-secondary" onclick="saveDraft()">save draft</button></a>
+                <a>
+                    <button type="submit" class="btn btn-secondary" onclick="saveDraft()">save draft</button>
+                </a>
                 {#                返回home页面#}
                 <a href="/user/home">
                     <button type="button" class="btn btn-secondary">Back</button>
                 </a>
             </div>
-         <div class="form-group row">
-            <label class="col-md-1 col-form-label" style="margin-left: 30px;">Abstract</label>
-            <div class="col-md-9" style="margin-left: 30px; width: 400px">
-{#                <input name="abstract" type="text" class="form-control" id="blogAbstract" placeholder="Enter blog abstract" style="width: 600px">#}
-                <textarea class="form-control" name="abstract" form="withBlog" rows="3" placeholder="your blog abstract">{{ blog.blog_abstract }}</textarea>
-                <h6>Max characters: 200 </h6>
+            <div class="form-group row">
+                <label class="col-md-1 col-form-label" style="margin-left: 30px;">Abstract</label>
+                <div class="col-md-9" style="margin-left: 30px; width: 400px">
+                    {#                <input name="abstract" type="text" class="form-control" id="blogAbstract" placeholder="Enter blog abstract" style="width: 600px">#}
+                    <textarea class="form-control" name="abstract" form="withBlog" rows="3"
+                              placeholder="your blog abstract">{{ blog.blog_abstract }}</textarea>
+                    <h6>Max characters: 200 </h6>
+                </div>
             </div>
+
         </div>
 
-    </div>
-
-    <div class="mk-editor row">
-        <textarea id="editor-edit" class="cur" name="blog">{{ blog.blog_content }}</textarea>
-        <div id="editor-show" class="markdown-body" style="background-color:white;"></div>
-    </div>
-</form>
+        <div class="mk-editor row">
+            <textarea id="editor-edit" class="cur" name="blog">{{ blog.blog_content }}</textarea>
+            <div id="editor-show" class="markdown-body" style="background-color:white;"></div>
+        </div>
+    </form>
 {% endif %}
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -208,4 +190,3 @@
     }
 
 </script>
-{#{% endif %}#}

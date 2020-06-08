@@ -5,7 +5,7 @@ import datetime
 # Create your views here.
 # 导入用于装饰器修复技术的包
 from functools import wraps
-
+import socket
 # Create your views here.
 
 """
@@ -47,22 +47,37 @@ def register(request):
         pwd2 = request.POST.get('pwd2')
         gender = request.POST.get('gender')
         birthday = request.POST.get('datetimepicker')
+
+        # 获取主机名
+        hostname = socket.gethostname()
+        # 获取本机IP
+        ip = socket.gethostbyname(hostname)
+
         # 字符串中删掉某个字符
         birthday = birthday.replace('-', '')
         # 获取当前时间 即为注册时间
         now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
         # print(now_time)
-        # print(birthday)
         print('VALUES("{}", {}, "{}" , "{}", {}, {})'.format(name, now_time, email, pwd, birthday, gender))
+
         # 异常检测
-        if name == '':
-            message = 'The name can not be none'
+        if name == '' or len(name) >20:
+            message = 'The name length can not meet require'
             return render(request, 'signup.html', {'message': message})
-        if pwd == '':
-            message = 'password can not be none'
+        # 密码长度6<= <= 20
+        if pwd == '' or len(pwd) > 20 or len(pwd) < 6:
+            message = 'password length can not meet require'
             return render(request, 'signup.html', {'message': message})
         if pwd != pwd2:
             message = 'The password entered twice is different'
+            return render(request, 'signup.html', {'message': message})
+        # 名字中不能又空格和-字符
+        if len(name.replace('-', '').replace(' ', '')) != len(name):
+            message = 'The name have illegal character'
+            return render(request, 'signup.html', {'message': message})
+        # 密码中不能有空格和-字符
+        if len(pwd.replace('-', '').replace(' ', '')) != len(pwd):
+            message = 'The password have illegal character'
             return render(request, 'signup.html', {'message': message})
 
         # 连接数据库
@@ -79,18 +94,21 @@ def register(request):
             # {}作为占位符
             'VALUES("{}", "{}", "{}" , "{}", "{}", {});'.format(name, now_time, email, pwd, birthday, gender)
         )
+        # 将登陆信息插入到login表中
+        sql2 = 'INSERT INTO login(ID, login_time, ip, errorcount) VALUES( (SELECT ID FROM `user` WHERE user_email = "{}"), "{}", "{}", 0); '.format(email, now_time, ip)
 
         try:
             # 执行sql语句
             print(sql)
             cursor.execute(sql)
+            cursor.execute(sql2)
             # 提交到数据库执行
             db.commit()
             print('execute sql success')
             # 设置session
             request.session['is_signup'] = '1'
             request.session['email'] = email
-
+            request.session['modify'] = 0
             return render(request, 'successRegisted.html')
         except:
             # Rollback in case there is any error
@@ -115,6 +133,16 @@ def logIn(request):
         email = request.POST.get('email')
         pwd = request.POST.get('pwd')
 
+        # 获取主机名
+        hostname = socket.gethostname()
+        # 获取本机IP
+        ip = socket.gethostbyname(hostname)
+
+        # 记录登陆错误的次数
+        # 存在就不设置
+        request.session.setdefault('error_count', 0)
+        now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
+
         print('begin login ')
         # 连接数据库
         db = pymysql.connect(host='localhost', port=3306, user='root', passwd='', db='food_blog', charset='utf8mb4')
@@ -122,46 +150,66 @@ def logIn(request):
         cursor = db.cursor()
         # SQL 查询语句
         sql = 'SELECT user_pass FROM user WHERE user_email = "{}"'.format(email)
+        # 将登陆信息插入到login表中
+        sql2 = 'INSERT INTO login(ID, login_time, ip, errorcount) VALUES( (SELECT ID FROM `user` WHERE user_email = "{}"), "{}", "{}", {}); '.format(email, now_time, ip, request.session['error_count'])
+        # 密码错误3次开始提示
+        if request.session['error_count'] < 3:
+            try:
+                # 执行SQL语句
+                cursor.execute(sql)
+                # 获取所有记录列表
+                if cursor is not None:  # 注意这里。单纯判断cursor是否为None是不够的
+                    result = cursor.fetchone()
+                    print('result', result)
+                    # 判断是否有此用户
+                    if result is not None:
+                        db_pwd = result[0]
+                        # 判断密码是否正确
+                        if db_pwd == pwd:
+                            # 将登陆信息记录到login表中
+                            try:
+                                cursor.execute(sql2)
+                                db.commit()
+                            except:
+                                db.rollback()
 
-        try:
-            # 执行SQL语句
-            cursor.execute(sql)
-            # 获取所有记录列表
-            if cursor is not None:  # 注意这里。单纯判断cursor是否为None是不够的
-                result = cursor.fetchone()
-                print('result', result)
-                # 判断是否有此用户
-                if result is not None:
-                    db_pwd = result[0]
-                    # 判断密码是否正确
-                    if db_pwd == pwd:
-                        print("log in success")
-                        # 设置session
-                        request.session['is_login'] = '1'
-                        request.session['email'] = email
-                        request.session['modify'] = 0
-                        # 设置session7秒后失效
-                        # request.session.set_expiry(7)
-                        return render(request, 'home.html')
+                            del request.session['error_count']
+                            # 设置session
+                            request.session['is_login'] = '1'
+                            request.session['email'] = email
+                            request.session['modify'] = 0
+                            # 设置session7秒后失效
+                            # request.session.set_expiry(7)
+                            print("log in success")
+                            return render(request, 'home.html')
+                        else:
+                            # 如果登陆错误则，error count +1
+                            request.session['error_count'] += 1
+                            print('pwd is true')
+                            message = 'the pwd is not true, please input again'
+                            return render(request, 'logIn.html', {'message': message})
                     else:
-                        print('pwd is true')
-                        message = 'the pwd is not true, please input again'
+                        print('result is  None')
+                        print('this user not exist')
+                        message = 'this user not exist, please chick the name whether true or not'
                         return render(request, 'logIn.html', {'message': message})
                 else:
-                    print('result is  None')
+                    print('cursor is None')
                     print('this user not exist')
                     message = 'this user not exist, please chick the name whether true or not'
                     return render(request, 'logIn.html', {'message': message})
-            else:
-                print('cursor is None')
-                print('this user not exist')
-                message = 'this user not exist, please chick the name whether true or not'
+                print('execute sql success')
+                db.commit()
+
+            except:
+                db.rollback()
+                print('rollback')
+                message = 'something error when log in'
+                print(message)
                 return render(request, 'logIn.html', {'message': message})
-            print('execute sql success')
-        except:
-            db.rollback()
-            print('rollback')
-            message = 'something error when log in'
+        else:
+            del request.session['error_count']
+            message = 'you login time is over 3 times'
             print(message)
             return render(request, 'logIn.html', {'message': message})
         cursor.close()
@@ -183,8 +231,8 @@ def home(request):
     cursor = db.cursor()
     # SQL 查询语句
     # 挑出所有发布了的文章
-    sql = 'SELECT b.blog_id, b.blog_title, b.blog_excerpt, p.publish_time FROM blog b, publish_blog p WHERE b.blog_id=p.blog_id AND p.publish_time <> "";'
-    sql2 = 'SELECT b.blog_id, b.blog_title, b.blog_excerpt, p.publish_time FROM blog b, publish_blog p WHERE b.blog_id=p.blog_id AND p.ID=(SELECT u.ID FROM `user` u WHERE u.user_email="{}");'.format(
+    sql = 'SELECT b.blog_id, b.blog_title, b.blog_excerpt, p.publish_time FROM blog b, publish_blog p WHERE b.blog_id=p.blog_id AND p.publish_time <> "" ORDER BY b.blog_modified DESC;'
+    sql2 = 'SELECT b.blog_id, b.blog_title, b.blog_excerpt, p.publish_time FROM blog b, publish_blog p WHERE b.blog_id=p.blog_id AND p.ID=(SELECT u.ID FROM `user` u WHERE u.user_email="{}") ORDER BY b.blog_modified DESC;'.format(
         email)
     sql3 = 'SELECT user_name FROM `user` WHERE user_email="{}";'.format(email)
     # food time中的文章列表
