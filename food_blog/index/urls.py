@@ -8,5 +8,6 @@ urlpatterns = [
     path(r'', index),
     # 登陆
     path(r'logIn', views.logIn),
+    # 测试使用
     path(r'test', views.test),
 ]

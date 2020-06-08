@@ -21,7 +21,8 @@ urlpatterns = [
     path(r'control/', admin.site.urls),
 
     # 进入子路由
+    # 首页
     path(r'index/', include('index.urls')),
-
+    # 用户相关操作
     path(r'user/', include('user.urls'))
 ]

@@ -66,7 +66,7 @@
                                         style="background-color: #303030; border:#303030; color: #adb5bd "></h1>
                                 <h2 class="lead" contenteditable=false id='userIdentity'><i class="fa fa-id-card-o"
                                                                                             style="color: #00bc8c"></i>&nbsp;&nbsp;&nbsp;<I>
-                                    <label for='userIdentity'></label><input id='userIdentity' readonly="readonly"
+                                    <label for='userIdentity'></label><input id='userIdentity'
                                                                              type="text" name="identity"
                                                                              value="{{ info.identity }}"
                                                                              style="background-color: #303030; border:#303030; color: #adb5bd "></I>
@@ -226,6 +226,7 @@
         $("#submit").hide();
         {#console.log($("#userName").attr("readonly"));#}
         {#点击之后将改变input的编辑状态，将不可编辑状态改成可以编辑状态#}
+        $("#userIdentity").attr("readonly", "readonly");
         $("#changeInfo").click(function () {
             if ($("#userName").attr("readonly") === 'readonly') {
                 {#去掉该属性#}
