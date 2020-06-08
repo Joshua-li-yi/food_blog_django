@@ -5,57 +5,265 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <link rel="icon" href="/static/img/food_blog_icon%20.png" style="width: auto;">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/me.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="/static/css/bootstrap-datetimepicker.min.css">
     <title>Me</title>
 </head>
 
 <body>
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-          <a class="nav-link active" data-toggle="tab" href="#home">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#profile">Profile</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#">Disabled</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-          <div class="dropdown-menu" style="">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something else here</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Separated link</a>
-          </div>
-        </li>
-      </ul>
-      <div id="myTabContent" class="tab-content">
-        <div class="tab-pane fade show active" id="home">
-          <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
-        </div>
-        <div class="tab-pane fade" id="profile">
-          <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit.</p>
-        </div>
-        <div class="tab-pane fade" id="dropdown1">
-          <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork.</p>
-        </div>
-        <div class="tab-pane fade" id="dropdown2">
-          <p>Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin. Cred vinyl keffiyeh DIY salvia PBR, banh mi before they sold out farm-to-table VHS viral locavore cosby sweater.</p>
-        </div>
-      </div>
-        <!-- Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.slim.min.js"
-            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
-        </script>
-        <script src="/js/bootstrap.js"></script>
+<div>
+    {% if message %}
+        <div class="alert alert-warning">{{ message }}</div>
+    {% endif %}
+
+
+    {#    导航栏#}
+    <div class="row">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#Profile">Profile</a>
+            </li>
+            {#        跳转回家#}
+            <li class="nav-item">
+                <a class="nav-link" href="/user/home" type="button" style="background-color:#343434">Back</a>
+            </li>
+            {#            退出登陆#}
+            <li class="nav-item el-col-md-offset-4">
+                <a class="nav-link " type="button" id='changeInfo'
+                   style="background-color:#343434; margin-right: -10px">Change Info</a>
+            </li>
+            <li class="nav-item el-col-md-offset-4">
+                <a class="nav-link " href="/user/logOut" type="button"
+                   style="background-color:#343434; margin-left:470px">Log Out</a>
+            </li>
+            <li class="nav-item el-col-md-offset-4" style="">
+                <a class="nav-link " href="/user/logOff" type="button"
+                   style="background-color:#343434; margin-left: 30px">Log Off</a>
+            </li>
+        </ul>
+    </div>
+    {#    简历开始页#}
+    <form method="post" action="/user/alterInfo">
+        {% if info %}
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane fade active show" id="Profile">
+                    <div class="container bg-dark text-light">
+                        <div id="wrapper">
+                            <!-- <div class="image">
+                                <img src="img/messi.jpg" alt="messi" class="img-thumbail img-responsive ">
+                            </div> -->
+                            {#                昵称和基本介绍#}
+                            <div class="content">
+                                {#                            contentEditable 可以改变文本的编辑状态#}
+
+                                <h1 class="display-4" contentEditable=false><label for='userName'></label><input
+                                        id='userName' readonly="readonly" type="text" name="name"
+                                        value="{{ info.name }}"
+                                        style="background-color: #303030; border:#303030; color: #adb5bd "></h1>
+                                <h2 class="lead" contenteditable=false id='userIdentity'><i class="fa fa-id-card-o"
+                                                                                            style="color: #00bc8c"></i>&nbsp;&nbsp;&nbsp;<I>
+                                    <label for='userIdentity'></label><input id='userIdentity'
+                                                                             type="text" name="identity"
+                                                                             value="{{ info.identity }}"
+                                                                             style="background-color: #303030; border:#303030; color: #adb5bd "></I>
+                                </h2>
+                            </div>
+                        </div>
+                        <hr class="my-auto">
+                        <div class="row row-info" style="margin-left: 30px">
+                            <div class="col-md-5">
+                                <h3 class="col-header-title text-success"><i class="fa fa-file"></i> Basic &nbsp;
+                                    Information </h3>
+                                <ul>
+                                    <li><i class="fa fa-id-card" style="color: #00bc8c"></i>&nbsp;&nbsp; {{ info.ID }}
+                                    </li>
+                                    <li><i class="fa fa-venus-mars"
+                                           style="color: #00bc8c"></i>&nbsp;&nbsp;<label
+                                            for='userGender'></label><input id='userGender' readonly="readonly"
+                                                                            type="text" name="gender"
+                                                                            value="{{ info.gender }}"
+                                                                            style="background-color: #303030; border:#303030; color: #adb5bd ">
+                                    </li>
+                                    <li><i class="fa fa-birthday-cake"
+                                           style="color: #00bc8c"></i>&nbsp;&nbsp; <input id='userBirthday'
+                                                                                          readonly="readonly"
+                                                                                          type="text" name="birthday"
+                                                                                          value="{{ info.birthday }}"
+                                                                                          style="background-color: #303030; border:#303030; color: #adb5bd ">
+
+
+                                    </li>
+                                    <li><i class="fa fa-key" style="color: #00bc8c"></i>&nbsp;&nbsp; <input id='userPwd'
+                                                                                                            readonly="readonly"
+                                                                                                            type="text"
+                                                                                                            name="pwd"
+                                                                                                            value="{{ info.pwd }}"
+                                                                                                            style="background-color: #303030; border:#303030; color: #adb5bd ">
+                                    </li>
+
+                                </ul>
+
+                            </div>
+
+                            <div class="col-md-5 offset-md-2">
+
+                                <h3 class="col-header-title text-success"><i class="fa fa-star-o fa-spin"></i>Contact
+                                </h3>
+                                <table>
+                                    <tr>
+                                        <td class="td1"><i class="fa fa-envelope" style="color: #00bc8c"></i></td>
+                                        <td><u>{{ info.email }} </u></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="td1"><a href="{{ info.blog_url }}" target="_blank"><i
+                                                class="fa fa-internet-explorer" style="color: #00bc8c"></i></a>
+                                        </td>
+                                        <td><input id='userUrl' readonly="readonly" type="text" name="url"
+                                                   value="{{ info.blog_url }}"
+                                                   style="background-color: #303030; border:#303030; color: #adb5bd ">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="td1"><i class="fa fa-phone" style="color: #00bc8c"></i></td>
+                                        <td><input id='userPhone' readonly="readonly" type="text" name="phone"
+                                                   value="{{ info.phone }}"
+                                                   style="background-color: #303030; border:#303030; color: #adb5bd ">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="td1"><i class="fa fa-qq" style="color: #00bc8c"></i></td>
+                                        <td><input id='userQQ' readonly="readonly" type="text" name="qq"
+                                                   value="{{ info.qq }}"
+                                                   style="background-color: #303030; border:#303030; color: #adb5bd ">
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="td1"><i class="fa fa-weixin" style="color: #00bc8c"></i></td>
+                                        <td><input id='userWechat' readonly="readonly" type="text" name="wechat"
+                                                   value="{{ info.wechat }}"
+                                                   style="background-color: #303030; border:#303030; color: #adb5bd ">
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="td1"><i class="fa fa-street-view" style="color: #00bc8c"></i></td>
+                                        <td><input id='userCity' readonly="readonly" type="text" name="city"
+                                                   value="{{ info.city }}"
+                                                   style="background-color: #303030; border:#303030; color: #adb5bd ">
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+
+                        <hr class="my-auto">
+                        <div class="row row-info" style="margin-left: 30px">
+                            <div class="col-md-5">
+                                <h3 class="col-header-title text-success"><i class="fa fa-user-circle-o"></i> About me
+                                </h3>
+                                <p><input id='userInfo' readonly="readonly" type="text" name="info"
+                                          value="{{ info.brief_info }}"
+                                          style="background-color: #303030; border:#303030; color: #adb5bd; height: 250px;width: 500px; border-radius: 30px;">
+                                </p>
+                            </div>
+                            <div class="col-md-5 offset-md-2">
+
+                                <h3 class="col-header-title text-success"><i class="fa fa-heart fa-spin "></i>OTHER</h3>
+                                <p><input id='userOther' readonly="readonly" type="text" name="other"
+                                          value="{{ info.other }}"
+                                          style="background-color: #303030; border:#303030; color: #adb5bd; height: 250px;width: 350px; border-radius: 30px; ">
+                                </p>
+                            </div>
+                            <button class="btn btn-success btn-md btn-lg" type="submit" id='submit'>Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        {% endif %}
+    </form>
+</div>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+</script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+</script>
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="/static/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap-datetimepicker.min.js"></script>
+{#     /*（重要，这就是日期控件所需的js）*/#}
+<script type="text/javascript" src="/static/js/bootstrap-datetimepicker.fr.js"></script>
+{#     /*（重要，弹出日历里面 显示的文字 bootstrap里面显示的是英文 ，触发后显示的年月日等的显示文字，即为：Jan，feb等等）*/#}
+
+<script type="text/javascript">
+    $('#userBirthday').datetimepicker({
+        forceParse: 0,//设置为0，时间不会跳转1899，会显示当前时间。
+        language: 'en',//显示中文
+        format: 'yyyy-mm-dd',//显示格式
+        minView: "month",//设置只显示到月份
+        initialDate: new Date(),//初始化当前日期
+        autoclose: true,//选中自动关闭
+        todayBtn: true//显示今日按钮
+    })
+    $("#date").datetimepicker("setDate", new Date());  //设置显示默认当天的时间
+</script>
+
 </body>
 
 </html>
+<script type="text/javascript">
+    $(document).ready(function () {
+        {#将submit按钮平时设置为隐藏状态#}
+        $("#submit").hide();
+        {#console.log($("#userName").attr("readonly"));#}
+        {#点击之后将改变input的编辑状态，将不可编辑状态改成可以编辑状态#}
+        $("#userIdentity").attr("readonly", "readonly");
+        $("#changeInfo").click(function () {
+            if ($("#userName").attr("readonly") === 'readonly') {
+                {#去掉该属性#}
+                $("#userName").removeAttr('readonly');
+                $("#userIdentity").removeAttr('readonly');
+                $("#userGender").removeAttr('readonly');
+                $("#userBirthday").removeAttr('readonly');
+
+                $("#userPwd").removeAttr('readonly');
+                $("#userUrl").removeAttr('readonly');
+                $("#userPhone").removeAttr('readonly');
+                $("#userQQ").removeAttr('readonly');
+                $("#userWechat").removeAttr('readonly');
+                $("#userCity").removeAttr('readonly');
+                $("#userInfo").removeAttr('readonly');
+                $("#userOther").removeAttr('readonly');
+
+                {#显示submit按钮#}
+                $("#submit").show();
+            } else {
+                {#设置为只读#}
+                $("#userName").attr("readonly", "readonly");
+                $("#userIdentity").attr("readonly", "readonly");
+                $("#userGender").attr("readonly", "readonly");
+                $("#userBirthday").attr("readonly", "readonly");
+                $("#userPwd").attr("readonly", "readonly");
+                $("#userUrl").attr("readonly", "readonly");
+                $("#userPhone").attr("readonly", "readonly");
+                $("#userQQ").attr("readonly", "readonly");
+                $("#userWechat").attr("readonly", "readonly");
+                $("#userCity").attr("readonly", "readonly");
+                $("#userInfo").attr("readonly", "readonly");
+                $("#userOther").attr("readonly", "readonly");
+
+                {#隐藏submit按钮#}
+                $("#submit").hide();
+            }
+        });
+    });
+</script>
