@@ -177,14 +177,14 @@
 
     function saveDraft() {
         document.blogForm.method = 'POST';
-        document.blogForm.action = '/user/saveDraft';
+        document.blogForm.action = '/blog/saveDraft';
         document.blogForm.submit();
         return true;
     }
 
     function deploy() {
         document.blogForm.method = 'POST';
-        document.blogForm.action = '/user/blogDeploy';
+        document.blogForm.action = '/blog/blogDeploy';
         document.blogForm.submit();
         return true;
     }

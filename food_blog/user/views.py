@@ -473,13 +473,23 @@ def alter_info(request):
         db = pymysql.connect(host='localhost', port=3306, user='root', passwd='', db='food_blog', charset='utf8mb4')
         # 创建游标
         cursor = db.cursor()
+        # birthday 的异常处理，如果异常用之前的记录
+        if '-' not in birthday:
+            sql0 = 'SELECT user_birthday FROM `user` WHERE user_email="{}";'.format(email)
+            cursor.execute(sql0)
+            if cursor is not None:  # 注意这里。单纯判断cursor是否为None是不够的
+                result = cursor.fetchone()
+                print('result', result)
+                # 判断是否有此消息
+                if result is not None:
+                    birthday = result[0]
         # SQL 查询语句
         sql = 'CALL modify_user_info("{}","{}", "{}", "{}", "{}", "{}", "{}","{}", {}, "{}","{}", "{}","{}", @msg);'.format(
             biref_info, other, phone, qq, wechat, blog_url, city, identity, int_gender, name, pwd, birthday, email)
         sql2 = 'SELECT @msg;'
         try:
             # 执行sql语句
-            # print(sql)
+            print(sql)
             cursor.execute(sql)
             print('execute sq success')
             cursor.execute(sql2)

@@ -89,7 +89,7 @@
                                                                             style="background-color: #303030; border:#303030; color: #adb5bd ">
                                     </li>
                                     <li><i class="fa fa-birthday-cake"
-                                           style="color: #00bc8c"></i>&nbsp;&nbsp; <input id='userBirthday'
+                                           style="color: #00bc8c"></i>&nbsp;&nbsp;<input id='userBirthday'
                                                                                           readonly="readonly"
                                                                                           type="text" name="birthday"
                                                                                           value="{{ info.birthday }}"
@@ -167,17 +167,32 @@
                             <div class="col-md-5">
                                 <h3 class="col-header-title text-success"><i class="fa fa-user-circle-o"></i> About me
                                 </h3>
-                                <p><input id='userInfo' readonly="readonly" type="text" name="info"
-                                          value="{{ info.brief_info }}"
-                                          style="background-color: #303030; border:#303030; color: #adb5bd; height: 250px;width: 500px; border-radius: 30px;">
+
+                                {#                                <p><input id='userInfo' readonly="readonly" type="text" name="info"#}
+                                {#                                          value="{{ info.brief_info }}"#}
+                                {#                                          style="background-color: #303030; border:#303030; color: #adb5bd; height: 250px;width: 500px; border-radius: 30px;">#}
+                                {#                                </p>#}
+
+                                {#                                使用textarea#}
+                                <p><textarea id='userInfo' readonly="readonly" type="text" name="info"
+                                             value=""
+                                             style="background-color: #303030; border:#303030; color: #adb5bd; width: 400px; border-radius: 30px;"
+                                             rows="4" maxlength="200">{{ info.brief_info }}</textarea>
+                                    <i style="margin-left: 0px"><span class="count-change">0</span>/200</i>
                                 </p>
                             </div>
                             <div class="col-md-5 offset-md-2">
 
                                 <h3 class="col-header-title text-success"><i class="fa fa-heart fa-spin "></i>OTHER</h3>
-                                <p><input id='userOther' readonly="readonly" type="text" name="other"
-                                          value="{{ info.other }}"
-                                          style="background-color: #303030; border:#303030; color: #adb5bd; height: 250px;width: 350px; border-radius: 30px; ">
+                                {#                                <p><input id='userOther' readonly="readonly" type="text" name="other"#}
+                                {#                                          value="{{ info.other }}"#}
+                                {#                                          style="background-color: #303030; border:#303030; color: #adb5bd; height: 250px;width: 350px; border-radius: 30px; ">#}
+                                {#                                </p>#}
+                                <p><textarea id='userOther' readonly="readonly" type="text" name="other"
+                                             value=""
+                                             style="background-color: #303030; border:#303030; color: #adb5bd;width: 350px; border-radius: 30px; "
+                                             rows="4"  maxlength="255">{{ info.other }}</textarea>
+                                    <i style="margin-right: 200px"><span class="count-change">0</span>/255</i>
                                 </p>
                             </div>
                             <button class="btn btn-success btn-md btn-lg" type="submit" id='submit'>Submit</button>
@@ -203,7 +218,6 @@
 {#     /*（重要，这就是日期控件所需的js）*/#}
 <script type="text/javascript" src="/static/js/bootstrap-datetimepicker.fr.js"></script>
 {#     /*（重要，弹出日历里面 显示的文字 bootstrap里面显示的是英文 ，触发后显示的年月日等的显示文字，即为：Jan，feb等等）*/#}
-
 <script type="text/javascript">
     $('#userBirthday').datetimepicker({
         forceParse: 0,//设置为0，时间不会跳转1899，会显示当前时间。
@@ -216,7 +230,6 @@
     })
     $("#date").datetimepicker("setDate", new Date());  //设置显示默认当天的时间
 </script>
-
 </body>
 
 </html>
@@ -266,4 +279,32 @@
             }
         });
     });
+    //监测从后台获取的可编辑文字、键盘输入的文字字数的变化，并赋值给span
+$(function () {
+    var text = $('#userInfo').val();
+    var len = text.length;
+    $('#userInfo').next().find('span').html(len);
+    $('textarea').keyup(function () {
+        var text = $(this).val();
+        len = text.length;
+        if (len > 200) {
+            return false;
+        }
+        $(this).next().find('span').html(len);
+    })
+});
+
+$(function () {
+    var text = $('#userOther').val();
+    var len = text.length;
+    $('#userOther').next().find('span').html(len);
+    $('textarea').keyup(function () {
+        var text = $(this).val();
+        len = text.length;
+        if (len > 255) {
+            return false;
+        }
+        $(this).next().find('span').html(len);
+    })
+});
 </script>

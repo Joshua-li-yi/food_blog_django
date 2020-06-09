@@ -24,5 +24,7 @@ urlpatterns = [
     # 首页
     path(r'index/', include('index.urls')),
     # 用户相关操作
-    path(r'user/', include('user.urls'))
+    path(r'user/', include('user.urls')),
+
+    path(r'blog/', include('blog.urls'))
 ]
