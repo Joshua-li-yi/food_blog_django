@@ -11,7 +11,7 @@ urlpatterns = [
     # 个人简历
     path(r'me', views.me),
     # 写博客
-    path(r'writeBlog', views.writeBlog),
+    # path(r'writeBlog', views.writeBlog),
     # 用户成功注册
     path(r'successRegisted', views.successRegisted),
     # 用户退出登陆
@@ -21,16 +21,17 @@ urlpatterns = [
     # 用户注销此账户
     path(r'logOff', views.log_off),
     # 保存blog
-    path(r'saveDraft', views.save_draft),
+    # path(r'saveDraft', views.save_draft),
     # 发布blog
-    path(r'blogDeploy', views.blog_deploy),
+    # path(r'blogDeploy', views.blog_deploy),
     # 搜索垃圾
     path(r'garbageSearch', views.garbage_search),
+    # 已转移到blog app
     # 必须使用url才行
     # 看blog
-    url('blog-(\d+)', views.see_blog),
+    # url('blog-(\d+)', views.see_blog),
     # 修改blog
-    url('blogModify-(\d+)', views.blog_modify),
+    # url('blogModify-(\d+)', views.blog_modify),
     # 删除blog
-    url('blogDelete-(\d+)', views.delete_blog),
+    # url('blogDelete-(\d+)', views.delete_blog),
 ]

@@ -71,9 +71,11 @@
                 <label class="col-md-1 col-form-label" style="margin-left: 30px;">Abstract</label>
                 <div class="col-md-9" style="margin-left: 30px; width: 400px">
                     {#                <input name="abstract" type="text" class="form-control" id="blogAbstract" placeholder="Enter blog abstract" style="width: 600px">#}
-                    <textarea class="form-control" name="abstract" form="withBlog" rows="3"
-                              placeholder="your blog abstract">{{ blog.blog_abstract }}</textarea>
-                    <h6>Max characters: 200 </h6>
+                    <textarea id="abstract" class="form-control" name="abstract" form="withBlog" rows="3"
+                              placeholder="your blog abstract" maxlength="200">{{ blog.blog_abstract }}</textarea>
+                    {#                    <h6>Max characters: 200 </h6>#}
+                    <i style="margin-left: 0px"><span class="count-change">0</span>/200</i>
+
                 </div>
             </div>
 
@@ -189,4 +191,18 @@
         return true;
     }
 
+    {#统计摘要中的字数#}
+    $(function () {
+        var text = $('#abstract').val();
+        var len = text.length;
+        $('#abstract').next().find('span').html(len);
+        $('textarea').keyup(function () {
+            var text = $(this).val();
+            len = text.length;
+            if (len > 200) {
+                return false;
+            }
+            $(this).next().find('span').html(len);
+        })
+    });
 </script>
