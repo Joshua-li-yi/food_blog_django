@@ -15,13 +15,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls import url
 
+from blog import views
 urlpatterns = [
-    # path('admin/', admin.site.urls),
-    path(r'control/', admin.site.urls),
-
-    # 进入子路由
-    path(r'index/', include('index.urls')),
-
-    path(r'user/', include('user.urls'))
+    # 写博客
+    path(r'writeBlog', views.writeBlog),
+    # 保存blog
+    path(r'saveDraft', views.save_draft),
+    # 发布blog
+    path(r'blogDeploy', views.blog_deploy),
+    # 看blog
+    url('blog-(\d+)', views.see_blog),
+    # 修改blog
+    url('blogModify-(\d+)', views.blog_modify),
+    # 删除blog
+    url('blogDelete-(\d+)', views.delete_blog),
 ]

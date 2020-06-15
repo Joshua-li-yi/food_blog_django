@@ -38,7 +38,7 @@
         <div class="form-inline my-2 my-lg-0">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/user/writeBlog">WriteBlog</a>
+                    <a class="nav-link" href="/blog/writeBlog">WriteBlog</a>
                 </li>
                 <li class="nav-item">
                     <!-- 提供额外的视觉效果，标识一组按钮中的原始动作 -->
@@ -118,9 +118,9 @@
                                 <h6 class="card-subtitle mb-2 text-muted">abstract</h6>
                                 <p class="card-text">{{ blog_content.abstract }}</p>
                                 <p class="card-text" style="color: #007bff">{{ blog_content.publish_time }}</p>
-                                <a href="/user/blog-{{ blog_id }}" class="card-link" target="_blank">See</a>
-                                <a href="/user/blogModify-{{ blog_id }}" class="card-link">Modify</a>
-                                <a href="/user/blogDelete-{{ blog_id }}" class="card-link">Delete</a>
+                                <a href="/blog/blog-{{ blog_id }}" class="card-link" target="_blank">See</a>
+                                <a href="/blog/blogModify-{{ blog_id }}" class="card-link">Modify</a>
+                                <a href="/blog/blogDelete-{{ blog_id }}" class="card-link">Delete</a>
                             </div>
                         </div>
                     </div>
@@ -141,8 +141,8 @@
                         <h6 class="card-subtitle mb-2 text-muted">abstract</h6>
                         <p class="card-text">{{ blog_content.abstract }}</p>
                         <p class="card-text" style="color: #007bff">{{ blog_content.publish_time }}</p>
-                        <a href="/user/blog-{{ blog_id }}" class="card-link" target="_blank">See</a>
-                        <a href="/user/blogModify-{{ blog_id }}" class="card-link">Modify</a>
+                        <a href="/blog/blog-{{ blog_id }}" class="card-link" target="_blank">See</a>
+                        <a href="/blog/blogModify-{{ blog_id }}" class="card-link">Modify</a>
                     </div>
                 </div>
             </div>
