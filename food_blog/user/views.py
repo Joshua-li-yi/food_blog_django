@@ -932,3 +932,5 @@ def garbage_search(request):
         print('close db')
     elif request.method == 'GET':
         return redirect('/user/home')
+
+
